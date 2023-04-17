@@ -1,4 +1,5 @@
 import  styled from 'styled-components';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
 
@@ -42,7 +43,7 @@ const Item = styled.li`
         cursor: pointer;
     }
 `;
-const Circle = styled.span`
+const Circle = styled(motion.span)`
     position: absolute;
     bottom: 13px;
     right: -8px;
@@ -52,12 +53,20 @@ const Circle = styled.span`
     border-radius: 2.5px;
 `;
 const Search = styled.span`
+    position: relative;
+    display: flex;
+    align-items: center;
     padding-right: 50px;
     color: white;
     svg { height: 25px; };
     :hover {
         cursor: pointer;
     }
+`;
+const Input = styled(motion.input)`
+    transform-origin: right; // 변화가 시작하는 위치
+    position: absolute;
+    left: -150px;
 `;
 
 const logoVariants = {
@@ -73,8 +82,10 @@ const logoVariants = {
 };
 
 function Header() {
+    const [searchOpen, setSearchOpen] = useState(false);
+    const toggleSearh = () => {setSearchOpen((prev) => !prev)};
     const homeMatch = useRouteMatch("/"); {/* 페이지 이동 표시 */}
-    const tvMatch = useRouteMatch("/tv");
+    const tvMatch = useRouteMatch("/tv"); {/* 페이지 이동 표시 */}
     return (
         <Nav>
             <Col>
@@ -92,29 +103,37 @@ function Header() {
                 <Items>
                     <Item>
                         <Link to="/">
-                            홈 { homeMatch?.isExact && <Circle /> }
+                            홈 { homeMatch?.isExact && <Circle layoutId='circle' /> } {/* 동그라미 이동 애니메이션 */}
                         </Link>
                     </Item>
                     <Item>
                         <Link to="/tv">
-                            시리즈 { tvMatch && <Circle /> }
+                            시리즈 { tvMatch && <Circle layoutId='circle' /> } {/* 동그라미 이동 애니메이션 */}
                         </Link>
                     </Item>
                 </Items>
             </Col>
             <Col>
                 <Search>
-                    <svg
+                    <motion.svg
+                        onClick={toggleSearh}
+                        animate={{ x: searchOpen ? -180 : 0 }} // 클릭: x축 이동/원위치
+                        transition={{ type: "linear" }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns="http://www.w3.org/2000/motion.svg"
                     >
                         <path
                             fillRule="evenodd"
                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                             clipRule="evenodd"
                         ></path>
-                    </svg>
+                    </motion.svg>
+                    <Input
+                        animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보이기/가리기
+                        transition={{ type: "linear" }}
+                        placeholder='관련 검색어를 입력하세요.'
+                    />
                 </Search>
             </Col>
         </Nav>
