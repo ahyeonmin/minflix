@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { theme } from './theme';
 import App from './App';
 import { RecoilRoot } from 'recoil';
 
@@ -33,7 +34,6 @@ const GlobalStyled = createGlobalStyle`
   body {
     line-height: 1;
     color: black;
-    background: linear-gradient(135deg, white,#00cd7e);
   }
   ol, ul {
     list-style: none;
