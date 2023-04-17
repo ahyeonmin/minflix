@@ -10,14 +10,14 @@ function App() {
     <Router>
       <Header />
       <Switch>
-        <Route path='/'>
-          <Home />  
-        </Route>
         <Route path='/tv'>
           <Tv />
         </Route>
         <Route path='/search'>
           <Search />
+        </Route>
+        <Route path='/'> {/* '/' 경로는 마지막에 작성해야 정상 작동 */}
+          <Home />  
         </Route>
       </Switch>
     </Router>

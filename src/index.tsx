@@ -50,6 +50,10 @@ const GlobalStyled = createGlobalStyle`
     border-collapse: collapse;
     border-spacing: 0;
   }
+  a {
+    text-decoration: none;
+    color: inherit; // 부모 색상 받기
+  }
 `;
 
 const root = ReactDOM.createRoot(
