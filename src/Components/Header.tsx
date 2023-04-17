@@ -1,9 +1,9 @@
 import  styled from 'styled-components';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, useAnimation, useViewportScroll } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-const Nav = styled.div`
+const Nav = styled(motion.nav)`
     background-color: black;
     display: flex;
     justify-content: space-between;
@@ -80,14 +80,33 @@ const logoVariants = {
         },
     },
 };
+const navVariants = {
+    top: {
+        backgroundColor: "rgba(0, 0, 0, 0)",
+    },
+    scroll: {
+        backgroundColor: "rgba(0, 0, 0, 1)",
+    },
+}
 
 function Header() {
     const [searchOpen, setSearchOpen] = useState(false);
     const toggleSearh = () => {setSearchOpen((prev) => !prev)};
     const homeMatch = useRouteMatch("/"); {/* 페이지 이동 표시 */}
     const tvMatch = useRouteMatch("/tv"); {/* 페이지 이동 표시 */}
+    const navAnimation = useAnimation();  {/* 특정 코드로 애니메이션 실행 */}
+    const { scrollY } = useViewportScroll(); {/* 스크롤 모션 값 */}
+    useEffect(() => {
+        scrollY.onChange(() => {
+            if (scrollY.get() > 80) {
+                navAnimation.start("scroll");
+            } else {
+                navAnimation.start("top");
+            }
+        });
+    }, [scrollY, navAnimation]);
     return (
-        <Nav>
+        <Nav variants={navVariants} initial="top" animate={navAnimation}>
             <Col>
                 <Logo
                     variants={logoVariants}
@@ -117,7 +136,7 @@ function Header() {
                 <Search>
                     <motion.svg
                         onClick={toggleSearh}
-                        animate={{ x: searchOpen ? -180 : 0 }} // 클릭: x축 이동/원위치
+                        animate={{ x: searchOpen ? -180 : 0 }} // 클릭: x축 방향으로 이동/원위치
                         transition={{ type: "linear" }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
@@ -130,7 +149,7 @@ function Header() {
                         ></path>
                     </motion.svg>
                     <Input
-                        animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보이기/가리기
+                        animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보여주기/닫기
                         transition={{ type: "linear" }}
                         placeholder='관련 검색어를 입력하세요.'
                     />
