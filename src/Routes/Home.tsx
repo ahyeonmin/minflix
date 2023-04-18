@@ -4,7 +4,7 @@ import { IGetMoviesResult, getMovies } from './api';
 import { makeImagePath } from '../utils';
 
 const Wrapper = styled.div`
-    background-color: #22b47c;
+    background-color: black;
     height: 200vh;
 `;
 const Loader = styled.div`
@@ -17,7 +17,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 50px;
+    padding: 0 60px;
     height: 100vh;
     background-image:
         linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8)),
@@ -28,12 +28,14 @@ const Banner = styled.div<{ bgPhoto: string }>`
 const Title = styled.h2`
     margin-bottom: 20px;
     color: ${(prop) => prop.theme.white.darker};
-    font-size: 38px;
+    font-weight: 700;
+    font-size: 40px;
 `;
 const Overview = styled.p`
     width: 50%;
     color: ${(prop) => prop.theme.white.darker};
     font-size: 16px;
+    line-height: 22px;
 `;
 
 function Home() {

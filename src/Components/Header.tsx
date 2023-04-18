@@ -23,8 +23,8 @@ const Col = styled.div`
 const Logo = styled(motion.svg)`
     width: 95px;
     height: 25px;
-    padding-left: 50px;
-    margin-right: 50px;
+    padding-left: 60px;
+    margin-right: 40px;
     fill: ${(prop) => prop.theme.red};
     :hover {
         cursor: pointer;
@@ -36,8 +36,9 @@ const Items = styled.ul`
 `;
 const Item = styled.li`
     position: relative;
-    margin-right: 20px;
+    margin-right: 22px;
     color: ${(prop) => prop.theme.white.lighter};
+    font-weight: 200;
     :hover {
         color: ${(prop) => prop.theme.white.darker};
         transition: ease-in-out 0.2s;
@@ -57,7 +58,7 @@ const Search = styled.span`
     position: relative;
     display: flex;
     align-items: center;
-    padding-right: 50px;
+    padding-right: 60px;
     color: white;
     svg { height: 25px; };
     :hover {
