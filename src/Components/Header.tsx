@@ -2,6 +2,7 @@ import  styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { motion, useAnimation, useViewportScroll } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { type } from 'os';
 
 const Nav = styled(motion.nav)`
     background-color: black;
@@ -106,7 +107,7 @@ function Header() {
         });
     }, [scrollY, navAnimation]);
     return (
-        <Nav variants={navVariants} initial="top" animate={navAnimation}>
+        <Nav variants={navVariants} initial="top" animate={navAnimation} transition={{type: "spring"}}>
             <Col>
                 <Logo
                     variants={logoVariants}
