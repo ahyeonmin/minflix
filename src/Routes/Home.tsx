@@ -47,14 +47,18 @@ const Row = styled(motion.div)`
     position: absolute;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    gap: 5px;
     width: 100%;
 `;
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ bgPhoto: string }>`
     background-color: white;
-    height: 200px;
+    height: 150px;
     color: red;
     font-size: 30px;
+    border-radius: 3px;
+    background-image: url(${(props) => props.bgPhoto});
+    background-size: cover;
+    background-position: center center;
 `;
 
 const rowVariants = {
@@ -69,9 +73,21 @@ const rowVariants = {
     },
 }
 
+const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
+
 function Home() {
     const [ index, setIndex ] = useState(0);
-    const increaseIndex = () => setIndex((prev) => prev + 1);
+    const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
+    const increaseIndex = () => {
+        if (data) {
+            if (leaving) return;
+            toggleLeaving(); // Exit이 끝나면 호출되고, leaving을 false로 바꾸기
+            const totalMovies = data?.results.length - 1; // 배너에 사용한 영화 하나 제외
+            const maxIndex = Math.floor(totalMovies / offset) - 1; // 0에서부터 시작하는 페이지
+            setIndex((prev) => prev === maxIndex ? 0 : prev + 1); // 마지막 페이지에 도달하면 되돌리기
+        }
+    }
+    const toggleLeaving = () => setLeaving((prev) => !prev); // 항상 true인 leaving 상태를 반전
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
     console.log(data, isLoading);
     return (
@@ -84,7 +100,7 @@ function Home() {
                 </Banner>
             }
             <Slider>
-                <AnimatePresence>
+                <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
                     <Row
                         key={index}
                         variants={rowVariants}
@@ -93,7 +109,15 @@ function Home() {
                         exit="exit"
                         transition={{type: "tween", duration: 0.7}} // spring(기본)이 아닌 linear 애니메이션으로 설정하기
                     >
-                        {[1, 2, 3, 4, 5, 6].map((i) => <Box key={i}>{i}</Box>)}
+                        {data?.results
+                            .slice(1)
+                            .slice(offset*index, offset*index+offset)
+                            .map((movie) => (
+                                <Box
+                                    key={movie.id}
+                                    bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                                />
+                        ))}
                     </Row>
                 </AnimatePresence>
             </Slider>
