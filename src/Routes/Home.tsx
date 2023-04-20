@@ -59,6 +59,13 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
+    cursor: pointer;
+    &:first-child { // 가려지는 박스는 시작하는 위치를 바꿔준다
+        transform-origin: center left;
+    };
+    &:last-child {
+        transform-origin: center right;
+    }
 `;
 
 const rowVariants = {
@@ -70,6 +77,20 @@ const rowVariants = {
     },
     exit: {
         x: -window.outerWidth,
+    },
+}
+const boxVariants = {
+    normal: { // 커서를 치우면 딜레이 없음이 바로 반응
+        scale: 1,
+    },
+    hover: {
+        scale: 1.3,
+        y: -50,
+        transition: {
+            type: "tween",
+            delay: 0.5,
+            duration: 0.3,
+        },
     },
 }
 
@@ -115,6 +136,10 @@ function Home() {
                             .map((movie) => (
                                 <Box
                                     key={movie.id}
+                                    variants={boxVariants}
+                                    initial="normal"
+                                    whileHover="hover"
+                                    transition={{ type: "tween" }}
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                                 />
                         ))}
