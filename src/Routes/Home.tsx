@@ -53,8 +53,6 @@ const Row = styled(motion.div)`
 const Box = styled(motion.div)<{ bgPhoto: string }>`
     background-color: white;
     height: 150px;
-    color: red;
-    font-size: 30px;
     border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
@@ -66,6 +64,19 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     &:last-child {
         transform-origin: center right;
     }
+`;
+const Info = styled(motion.div)`
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    background-color: ${(props) => props.theme.black.lighter};
+    h4 {
+        color: ${(props) => props.theme.white.lighter};
+        text-align: center;
+        font-size: 15px;
+    }
+    opacity: 0;
 `;
 
 const rowVariants = {
@@ -86,6 +97,7 @@ const boxVariants = {
     hover: {
         scale: 1.3,
         y: -50,
+        zIndex: 99, // 다른 박스들 위에 있도록 하기
         transition: {
             type: "tween",
             delay: 0.5,
@@ -93,6 +105,16 @@ const boxVariants = {
         },
     },
 }
+const InfoVariants = {
+    hover: {
+        opacity: 1,
+        transition: {
+            type: "tween",
+            delay: 0.5,
+            duration: 0.3,
+        },
+    },
+};
 
 const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
 
@@ -141,7 +163,11 @@ function Home() {
                                     whileHover="hover"
                                     transition={{ type: "tween" }}
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                                />
+                                >
+                                    <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}
+                                        <h4>{movie.title}</h4>
+                                    </Info>
+                                </Box>
                         ))}
                     </Row>
                 </AnimatePresence>
