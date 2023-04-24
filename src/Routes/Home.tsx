@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IGetMoviesResult, getMovies } from './api';
 import { makeImagePath } from '../utils';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const Wrapper = styled.div`
     background-color: black;
@@ -121,6 +122,8 @@ const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
 function Home() {
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
+    const history = useHistory(); // URL 이동
+    const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
     const increaseIndex = () => {
         if (data) {
             if (leaving) return;
@@ -131,8 +134,10 @@ function Home() {
         }
     }
     const toggleLeaving = () => setLeaving((prev) => !prev); // 항상 true인 leaving 상태를 반전
+    const onBoxClicked = (movieId: number) => {
+        history.push(`/movies/${movieId}`);
+    };
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
-    console.log(data, isLoading);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
@@ -158,6 +163,8 @@ function Home() {
                             .map((movie) => (
                                 <Box
                                     key={movie.id}
+                                    layoutId={movie.id + ""} // 문자열로 변환
+                                    onClick={() => onBoxClicked(movie.id)}
                                     variants={boxVariants}
                                     initial="normal"
                                     whileHover="hover"
@@ -172,6 +179,23 @@ function Home() {
                     </Row>
                 </AnimatePresence>
             </Slider>
+            <AnimatePresence>
+                {bigMovieMatch ? (
+                    <motion.div
+                        layoutId={bigMovieMatch.params.movieId}
+                        style={{
+                            position: "absolute",
+                            top: 50,
+                            left: 0,
+                            right: 0,
+                            margin: "0 auto",
+                            width: "40vw",
+                            height: "70vh",
+                            backgroundColor: "whitesmoke"
+                        }}
+                    />
+                ) : null}
+            </AnimatePresence>
         </Wrapper>
     );
 }
