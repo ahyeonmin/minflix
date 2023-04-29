@@ -144,9 +144,23 @@ const BigCover = styled.div`
     background-position: center center;
 `;
 
-const BigTitle = styled.div`
-    font-size: 20px;
+const BigTitle = styled.h3`
+    position: relative;
+    top: -70px;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: 600;
     color: ${(props) => props.theme.white.lighter};
+`;
+
+const BigOverview = styled.p`
+    position: relative;
+    top: -70px;
+    width: 70%;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 18px;
+    color: ${(props) => props.theme.white.darker};
 `;
 
 const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
@@ -233,10 +247,13 @@ function Home() {
                                 <>
                                     <BigCover
                                         style={{
-                                            backgroundImage: `url(${makeImagePath(clickedMovie.backdrop_path, "w500")})`
+                                            backgroundImage:
+                                                `linear-gradient(to top, #141414, transparent),
+                                                url(${makeImagePath(clickedMovie.backdrop_path)})`,
                                         }}
                                     />
                                     <BigTitle>{clickedMovie.title}</BigTitle>
+                                    <BigOverview>{clickedMovie.overview}</BigOverview>
                                 </>
                             }
                         </BigMovie>
