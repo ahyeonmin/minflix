@@ -133,7 +133,20 @@ const BigMovie = styled(motion.div)`
     margin: 0 auto;
     width: 40vw;
     height: 85vh;
-    background-color: whitesmoke;
+    background-color: ${(props) => props.theme.black.veryDark};
+    border-radius: 7px;
+`;
+
+const BigCover = styled.div`
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-position: center center;
+`;
+
+const BigTitle = styled.div`
+    font-size: 20px;
+    color: ${(props) => props.theme.white.lighter};
 `;
 
 const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
@@ -159,6 +172,10 @@ function Home() {
     const onOverlayClicked = () => history.push("/");
     const { scrollX, scrollY } = useViewportScroll();
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
+    const clickedMovie = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환)
+        bigMovieMatch?.params.movieId &&
+        data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    console.log(clickedMovie);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> :
@@ -211,7 +228,18 @@ function Home() {
                         <BigMovie
                             layoutId={bigMovieMatch.params.movieId}
                             style={{ top: scrollY.get() + 50 }} // 스크롤을 해도 따라오도록 하기 (값을 넣으면 위치가 고정됨), get()으로 실제값을 받아옴
-                        />
+                        >
+                            {clickedMovie &&
+                                <>
+                                    <BigCover
+                                        style={{
+                                            backgroundImage: `url(${makeImagePath(clickedMovie.backdrop_path, "w500")})`
+                                        }}
+                                    />
+                                    <BigTitle>{clickedMovie.title}</BigTitle>
+                                </>
+                            }
+                        </BigMovie>
                     </>
                 ) : null}
             </AnimatePresence>
