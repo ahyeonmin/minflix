@@ -189,16 +189,15 @@ function Home() {
     const clickedMovie = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환)
         bigMovieMatch?.params.movieId &&
         data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-    console.log(clickedMovie);
     return (
         <Wrapper>
-            {isLoading ? <Loader>Loading...</Loader> :
+            {isLoading ? <Loader>Loading...</Loader> : (
                 // 배너에는 첫번쨰 항목 보여주기
                 <Banner onClick={increaseIndex} bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
                     <Title>{data?.results[0].title}</Title>
                     <Overview>{data?.results[0].overview}</Overview>
                 </Banner>
-            }
+            )}
             <Slider>
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
                     <Row
@@ -213,6 +212,7 @@ function Home() {
                             .slice(1)
                             .slice(offset*index, offset*index+offset)
                             .map((movie) => (
+                                <>
                                 <Box
                                     key={movie.id}
                                     layoutId={movie.id + ""} // 문자열로 변환
@@ -227,6 +227,7 @@ function Home() {
                                         <h4>{movie.title}</h4>
                                     </Info>
                                 </Box>
+                                </>
                         ))}
                     </Row>
                 </AnimatePresence>

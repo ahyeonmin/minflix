@@ -1,8 +1,12 @@
 import  styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { motion, useAnimation, useViewportScroll } from 'framer-motion';
-import { Link, useRouteMatch } from 'react-router-dom';
-import { type } from 'os';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
+interface IForm {
+    keyword: string;
+}
 
 const Nav = styled(motion.nav)`
     background-color: black;
@@ -54,7 +58,7 @@ const Circle = styled(motion.span)`
     height: 5px;
     border-radius: 2.5px;
 `;
-const Search = styled.span`
+const Search = styled.form `
     position: relative;
     display: flex;
     align-items: center;
@@ -107,6 +111,12 @@ function Header() {
             }
         });
     }, [scrollY, navAnimation]);
+    const history = useHistory();
+    const { register, handleSubmit } = useForm<IForm>();
+    const onValid = (data: IForm) => { // data를 인자로 받아온다
+        console.log(data);
+        history.push(`/search?keyword=${data.keyword}`); // 검색 버튼 클릭시 search 페이지로 이동
+    };
     return (
         <Nav variants={navVariants} initial="top" animate={navAnimation} transition={{type: "spring"}}>
             <Col>
@@ -135,7 +145,7 @@ function Header() {
                 </Items>
             </Col>
             <Col>
-                <Search>
+                <Search onSubmit={handleSubmit(onValid)}>
                     <motion.svg
                         onClick={toggleSearh}
                         animate={{ x: searchOpen ? -180 : 0 }} // 클릭: x축 방향으로 이동/원위치
@@ -151,6 +161,7 @@ function Header() {
                         ></path>
                     </motion.svg>
                     <Input
+                        {...register("keyword", { required: "true", minLength: 2 })}
                         initial={false} // 새로고침시 제자리에서 시작
                         animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보여주기/닫기
                         transition={{ type: "linear" }}
