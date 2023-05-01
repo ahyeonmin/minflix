@@ -5,6 +5,14 @@ const Wrapper = styled.div`
     height: 200vh;
     background-color: ${(props) => props.theme.black.veryDark};
     color: white;
+    padding-top: 70px;
+`;
+const ResultsTitle = styled.h3`
+    padding: 60px;
+    font-size: 16px;
+    span:first-child {
+        color: gray;
+    }
 `;
 
 function Search() {
@@ -13,7 +21,10 @@ function Search() {
     console.log(keyword);
     return (
         <Wrapper>
-            '{keyword}'로 검색한 결과입니다.
+            <ResultsTitle>
+                <span>{keyword}</span>
+                <span>에 대한 검색 결과입니다.</span>
+            </ResultsTitle>
         </Wrapper>
     );
 }

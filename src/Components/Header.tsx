@@ -165,7 +165,7 @@ function Header() {
                         initial={false} // 새로고침시 제자리에서 시작
                         animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보여주기/닫기
                         transition={{ type: "linear" }}
-                        placeholder='관련 검색어를 입력하세요.'
+                        placeholder='영화, 시리즈를 검색하세요.'
                     />
                 </Search>
             </Col>
