@@ -23,3 +23,7 @@ export interface IGetMoviesResult {
 export async function getMovies(){
     return await (await fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR`)).json();
 }
+
+export async function getSearch(keyword: string){
+    return await (await fetch(`${BASE_PATH}search/multi?api_key=${API_KEY}&language=ko-KR&query=${keyword}&page=1&include_adult=false`)).json();
+}
