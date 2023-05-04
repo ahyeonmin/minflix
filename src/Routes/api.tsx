@@ -7,6 +7,8 @@ interface IMoive {
     overview: string;
     poster_path: string;
     title: string;
+    original_title: string;
+    original_name: string;
 }
 
 export interface IGetMoviesResult {

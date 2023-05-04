@@ -112,10 +112,15 @@ function Header() {
         });
     }, [scrollY, navAnimation]);
     const history = useHistory();
-    const { register, handleSubmit } = useForm<IForm>();
+    const { register, handleSubmit } = useForm<IForm>({
+        defaultValues: {
+            keyword: "",
+        },
+    });
     const onValid = (data: IForm) => { // data를 인자로 받아온다
         console.log(data);
         history.push(`/search?keyword=${data.keyword}`); // 검색 버튼 클릭시 search 페이지로 이동
+        window.location.reload(); // 새로고침을 해야만 reload 되는 문제를 해결. 그러나 깜빡임 문제가 있음. 이 문제는 react-router-dom V6 업그레이드 후 navigate로 다시 시도해봐야겠다.
     };
     return (
         <Nav variants={navVariants} initial="top" animate={navAnimation} transition={{type: "spring"}}>

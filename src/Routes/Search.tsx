@@ -115,7 +115,7 @@ function Search() {
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}>
-                                        <h4>{movie.title}</h4>
+                                        <h4>{movie.title ? movie.title : movie.original_title || movie.original_name}</h4>
                                     </Info>
                                 </Box>
                             ))}
