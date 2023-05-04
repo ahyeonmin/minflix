@@ -6,7 +6,7 @@ import { makeImagePath } from '../utils';
 import { motion } from "framer-motion";
 
 const Wrapper = styled.div`
-    height: 200vh;
+    height: 100vh;
     background-color: ${(props) => props.theme.black.veryDark};
     color: white;
     padding-top: 70px;
@@ -52,6 +52,12 @@ const Info = styled(motion.div)`
     }
     opacity: 0;
 `;
+const NoSearchData = styled.div`
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
 const boxVariants = {
     normal: {
@@ -92,27 +98,30 @@ function Search() {
                         <span>{keyword}</span>
                         <span>에 대한 검색 결과입니다.</span>
                     </ResultsTitle>
-                    <Row
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        transition={{type: "tween", duration: 0.7}} // spring(기본)이 아닌 linear 애니메이션으로 설정하기
-                    >
-                        {data?.results.map((movie) => (
-                            <Box
-                                key={movie.id}
-                                variants={boxVariants}
-                                initial="normal"
-                                whileHover="hover"
-                                transition={{ type: "tween" }}
-                                bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    {data && data.results.length > 0 ? (
+                        <Row
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            transition={{type: "tween", duration: 0.7}} // spring(기본)이 아닌 linear 애니메이션으로 설정하기
                             >
-                                <Info variants={InfoVariants}>
-                                    <h4>{movie.title}</h4>
-                                </Info>
-                            </Box>
-                        ))}
-                    </Row>
+                            {data?.results.map((movie) => (
+                                <Box
+                                    key={movie.id}
+                                    variants={boxVariants}
+                                    initial="normal"
+                                    whileHover="hover"
+                                    transition={{ type: "tween" }}
+                                    bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                                >
+                                    <Info variants={InfoVariants}>
+                                        <h4>{movie.title}</h4>
+                                    </Info>
+                                </Box>
+                            ))}
+                        </Row>) : (
+                            <NoSearchData> '{keyword}'에 대한 검색 결과가 없습니다. </NoSearchData>
+                    )}
                 </>
             )}
         </Wrapper>
