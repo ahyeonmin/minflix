@@ -6,7 +6,7 @@ import { makeImagePath } from '../utils';
 import { motion } from "framer-motion";
 
 const Wrapper = styled.div`
-    height: 100vh;
+    height: 200vh;
     background-color: ${(props) => props.theme.black.veryDark};
     color: white;
     padding-top: 70px;
@@ -19,6 +19,7 @@ const Loader = styled.div`
 `;
 const ResultsTitle = styled.h3`
     padding: 60px;
+    padding-bottom: 20px;
     font-size: 16px;
     span:first-child {
         color: gray;
@@ -26,7 +27,7 @@ const ResultsTitle = styled.h3`
 `;
 const Row = styled(motion.div)`
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 5px;
     padding: 25px 60px;
 `;
@@ -36,6 +37,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     justify-content: center;
     align-items: center;
     height: 150px;
+    margin-bottom: 55px;
     border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;

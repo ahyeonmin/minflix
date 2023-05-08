@@ -5,10 +5,13 @@ import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
 import { IGetMoviesResult, getMovies } from './api';
 import { makeImagePath } from '../utils';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaChevronRight} from "react-icons/fa";
 
 const Wrapper = styled.div`
     background-color: black;
     height: 200vh;
+    overflow: hidden; // 초과되는 내용은 가려서 스크롤바를 없앤다
 `;
 const Loader = styled.div`
     height: 100vh;
@@ -43,20 +46,26 @@ const Overview = styled.p`
 const Slider = styled.div`
     position: relative;
     top: -150px;
+    margin: 0 60px;
+`;
+const RowTitle = styled(motion.div)`
+    color: white;
+    font-size: 20px;
+    padding-bottom: 12px;
 `;
 const Row = styled(motion.div)`
+    width: 100%;
     position: absolute;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 5px;
-    width: 100%;
 `;
 const Box = styled(motion.div)<{ bgPhoto: string }>`
     width: 100%;
+    height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 150px;
     border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
@@ -83,6 +92,14 @@ const Info = styled(motion.div)`
         font-weight: 500;
     }
     opacity: 0;
+`;
+const SliderBtn = styled(motion.div)`
+    position: absolute;
+    right: 15px;
+    bottom: 30px;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
 `;
 
 const rowVariants = {
@@ -198,13 +215,14 @@ function Home() {
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> : (
                 // 배너에는 첫번쨰 항목 보여주기
-                <Banner onClick={increaseIndex} bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
                     <Title>{data?.results[0].title}</Title>
                     <Overview>{data?.results[0].overview}</Overview>
                 </Banner>
             )}
             <Slider>
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
+                    <RowTitle> 지금 상영 중인 영화 </RowTitle>
                     <Row
                         key={index}
                         variants={rowVariants}
@@ -237,6 +255,9 @@ function Home() {
                     </Row>
                 </AnimatePresence>
             </Slider>
+            <SliderBtn onClick={increaseIndex} whileHover={ {scale: 1.4 }}>
+                <FaChevronRight/>
+            </SliderBtn>
             <AnimatePresence>
                 {bigMovieMatch ? (
                     <>
