@@ -25,30 +25,41 @@ const ResultsTitle = styled.h3`
     }
 `;
 const Row = styled(motion.div)`
-    width: 100%;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 5px;
     padding: 25px 60px;
 `;
 const Box = styled(motion.div)<{ bgPhoto: string }>`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 150px;
+    border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
-    border-radius: 3px;
     cursor: pointer;
+    &:first-child { // 가려지는 박스는 시작하는 위치를 바꿔준다
+        transform-origin: center left;
+    };
+    &:last-child {
+        transform-origin: center right;
+    }
+    &:hover {
+        background-image: linear-gradient(to top, #141414, transparent), url(${(props) => props.bgPhoto});
+    }
 `;
 const Info = styled(motion.div)`
     position: absolute;
     bottom: 0;
-    width: 100%;
     padding: 10px 0;
-    background-color: ${(props) => props.theme.black.lighter};
     h4 {
         color: ${(props) => props.theme.white.lighter};
         text-align: center;
-        font-size: 15px;
+        font-size: 13px;
+        font-weight: 500;
     }
     opacity: 0;
 `;
@@ -112,7 +123,7 @@ function Search() {
                                     initial="normal"
                                     whileHover="hover"
                                     transition={{ type: "tween" }}
-                                    bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                                    bgPhoto={makeImagePath(movie.backdrop_path || movie.poster_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}>
                                         <h4>{movie.title ? movie.title : movie.original_title || movie.original_name}</h4>

@@ -52,7 +52,10 @@ const Row = styled(motion.div)`
     width: 100%;
 `;
 const Box = styled(motion.div)<{ bgPhoto: string }>`
-    background-color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 150px;
     border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
@@ -65,17 +68,19 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     &:last-child {
         transform-origin: center right;
     }
+    &:hover {
+        background-image: linear-gradient(to top, #141414, transparent), url(${(props) => props.bgPhoto});
+    }
 `;
 const Info = styled(motion.div)`
     position: absolute;
     bottom: 0;
-    width: 100%;
     padding: 10px 0;
-    background-color: ${(props) => props.theme.black.lighter};
-    h4 {
+    div {
         color: ${(props) => props.theme.white.lighter};
         text-align: center;
-        font-size: 15px;
+        font-size: 13px;
+        font-weight: 500;
     }
     opacity: 0;
 `;
@@ -224,7 +229,7 @@ function Home() {
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}
-                                        <h4>{movie.title}</h4>
+                                        <div>{movie.title}</div>
                                     </Info>
                                 </Box>
                                 </>

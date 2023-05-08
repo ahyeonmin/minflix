@@ -166,7 +166,7 @@ function Header() {
                         ></path>
                     </motion.svg>
                     <Input
-                        {...register("keyword", { required: "true", minLength: 2 })}
+                        {...register("keyword", { required: "true", minLength: 1 })}
                         initial={false} // 새로고침시 제자리에서 시작
                         animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보여주기/닫기
                         transition={{ type: "linear" }}
