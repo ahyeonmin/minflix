@@ -5,8 +5,7 @@ import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
 import { IGetMoviesResult, getMovies } from './api';
 import { makeImagePath } from '../utils';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaChevronRight} from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
 
 const Wrapper = styled.div`
     background-color: black;
@@ -93,7 +92,15 @@ const Info = styled(motion.div)`
     }
     opacity: 0;
 `;
-const SliderBtn = styled(motion.div)`
+const SliderBtnLeft = styled(motion.div)`
+    position: absolute;
+    left: 15px;
+    bottom: 30px;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+`;
+const SliderBtnRight = styled(motion.div)`
     position: absolute;
     right: 15px;
     bottom: 30px;
@@ -102,15 +109,19 @@ const SliderBtn = styled(motion.div)`
     cursor: pointer;
 `;
 
-const rowVariants = {
-    hidden: {
-        x: window.outerWidth, // 사용자 화면 크기 받아오기 (=window.innerWidth)
+const rowVariants = { // 사용자 화면 크기 받아오기 (=window.innerWidth)
+    hidden: (right: number) => {
+        return {
+            x: right === 1 ? window.outerWidth : -window.outerWidth,
+        };
     },
     visible: {
         x: 0,
     },
-    exit: {
-        x: -window.outerWidth,
+    exit: (right: number) => {
+        return {
+            x: right === 1 ? -window.outerWidth : window.outerWidth,
+        };
     },
 }
 const boxVariants = {
@@ -188,20 +199,31 @@ const BigOverview = styled.p`
 const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
 
 function Home() {
+    const [ isRight, setIsRight ] = useState(1); // left = 0, right = 1
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
     const history = useHistory(); // URL 이동
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-    const increaseIndex = () => {
+    const changeIndex = (right: number) => {
         if (data) {
             if (leaving) return;
+            setIsRight(right);
             toggleLeaving(); // Exit이 끝나면 호출되고, leaving을 false로 바꾸기
             const totalMovies = data?.results.length - 1; // 배너에 사용한 영화 하나 제외
-            const maxIndex = Math.floor(totalMovies / offset) - 1; // 0에서부터 시작하는 페이지
-            setIndex((prev) => prev === maxIndex ? 0 : prev + 1); // 마지막 페이지에 도달하면 되돌리기
+            const maxIndex = totalMovies % offset === 0 // 총 영화 개수와 보여줄 값이 딱 떨어진다면
+                ? Math.floor(totalMovies / offset) - 1
+                    : Math.floor(totalMovies / offset);
+            right === 1 // 오른쪽 버튼: 마지막 페이지에 도달하면 되돌린다. 왼쪽 버튼: 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
+                ? setIndex((prev) => prev === maxIndex ? 0 : prev + 1)
+                    : setIndex((prev) => prev === 0 ? maxIndex : prev - 1)
         }
     }
     const toggleLeaving = () => setLeaving((prev) => !prev); // 항상 true인 leaving 상태를 반전
+    const onClickSliderBtn = (right: number) => {
+        if(!leaving) {
+            changeIndex(right);
+        }
+    }
     const onBoxClicked = (movieId: number) => {
         history.push(`/movies/${movieId}`);
     };
@@ -220,12 +242,19 @@ function Home() {
                     <Overview>{data?.results[0].overview}</Overview>
                 </Banner>
             )}
+            <SliderBtnLeft onClick={() => onClickSliderBtn(-1)} whileHover={{ scale: 1.4 }}>
+                <FaChevronLeft/>
+            </SliderBtnLeft>
+            <SliderBtnRight onClick={() => onClickSliderBtn(1)} whileHover={{ scale: 1.4 }}>
+                <FaChevronRight/>
+            </SliderBtnRight>
             <Slider>
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
-                    <RowTitle> 지금 상영 중인 영화 </RowTitle>
+                    <RowTitle> 새로 올라온 영화 </RowTitle>
                     <Row
                         key={index}
                         variants={rowVariants}
+                        custom={isRight}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
@@ -255,9 +284,6 @@ function Home() {
                     </Row>
                 </AnimatePresence>
             </Slider>
-            <SliderBtn onClick={increaseIndex} whileHover={ {scale: 1.4 }}>
-                <FaChevronRight/>
-            </SliderBtn>
             <AnimatePresence>
                 {bigMovieMatch ? (
                     <>
