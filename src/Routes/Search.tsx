@@ -101,7 +101,6 @@ const InfoVariants = {
 function Search() {
     const location = useLocation(); // 현재 url에 관한 정보를 가져옴 (search 가져오기)
     const keyword = new URLSearchParams(location.search).get("keyword");
-    console.log(keyword);
     const { data, isLoading } = useQuery<IGetMoviesResult>("search", () => getSearch(keyword || ""))
     return (
         <Wrapper>
