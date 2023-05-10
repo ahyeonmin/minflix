@@ -101,7 +101,7 @@ const InfoVariants = {
 function Search() {
     const location = useLocation(); // 현재 url에 관한 정보를 가져옴 (search 가져오기)
     const keyword = new URLSearchParams(location.search).get("keyword");
-    const { data, isLoading } = useQuery<IGetMoviesResult>("search", () => getSearch(keyword || ""))
+    const { data, isLoading } = useQuery<IGetMoviesResult>("search", () => getSearch(keyword || ""));
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> : (
@@ -116,7 +116,7 @@ function Search() {
                             animate="visible"
                             exit="exit"
                             transition={{type: "tween", duration: 0.7}} // spring(기본)이 아닌 linear 애니메이션으로 설정하기
-                            >
+                        >
                             {data?.results.map((movie) => (
                                 <Box
                                     key={movie.id}

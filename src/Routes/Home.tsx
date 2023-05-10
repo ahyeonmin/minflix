@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
 import { IGetMoviesResult, getMovieDetails, getNowPlaying } from './api';
 import { makeImagePath } from '../utils';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
 
 const Wrapper = styled.div`
@@ -199,9 +199,6 @@ const BigOverview = styled.p`
 const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
 
 function Home() {
-    const location = useLocation();
-    const movieId = new URLSearchParams(location.search).get("movieId");
-    console.log(movieId);
     const [ isRight, setIsRight ] = useState(1); // left = 0, right = 1
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
@@ -236,6 +233,8 @@ function Home() {
     const clickedMovie = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환)
         bigMovieMatch?.params.movieId &&
         data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    const { data: movieDetailsData, isLoading: isMovieDetailsLoading } = useQuery<IGetMoviesResult>("movieDetails", () => getMovieDetails(bigMovieMatch?.params.movieId || "")); // useQuery hook을 2개 이상 사용할 경우 data와 isLoading에 이름을 설정한다. (중복 문제)
+    console.log(movieDetailsData);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> : (
