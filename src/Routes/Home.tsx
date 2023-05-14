@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
-import { IGetMoviesResult, getMovieDetails, getNowPlaying } from './api';
+import { IGetMoviesResult, getDetails, getNowPlaying } from './api';
 import { makeImagePath } from '../utils';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
@@ -158,7 +158,6 @@ const Overlay = styled(motion.div)`
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
-
 const BigMovie = styled(motion.div)`
     position: absolute;
     left: 0;
@@ -169,14 +168,12 @@ const BigMovie = styled(motion.div)`
     background-color: ${(props) => props.theme.black.veryDark};
     border-radius: 7px;
 `;
-
 const BigCover = styled.div`
     width: 100%;
     height: 400px;
     background-size: cover;
     background-position: center center;
 `;
-
 const BigTitle = styled.h3`
     position: relative;
     top: -70px;
@@ -185,7 +182,6 @@ const BigTitle = styled.h3`
     font-weight: 600;
     color: ${(props) => props.theme.white.lighter};
 `;
-
 const BigOverview = styled.p`
     position: relative;
     top: -70px;
@@ -204,6 +200,8 @@ function Home() {
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
     const history = useHistory(); // URL 이동
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+    // console.log(bigMovieMatch?.params.movieId);
+    // const { data: detailsData } = useQuery<IGetMoviesResult>("details", () => getDetails(movieId || "")); // API를 불러오지 못한다.. movieId에 defined가 들어가서 그런듯
     const changeIndex = (right: number) => {
         if (data) {
             if (leaving) return;
@@ -224,17 +222,21 @@ function Home() {
             changeIndex(right);
         }
     }
-    const onBoxClicked = (movieId: number) => {
+
+    const [ getId, setGetId ] = useState(0); // movieId를 state로 관리한다.
+    const onBoxClicked = (movieId: number) => { // 박스를 클릭할때 얻어오는 movieId를 getId에 넣어준다.
         history.push(`/movies/${movieId}`);
+        setGetId(+history.location.pathname.slice(8));
     };
+    const { data: detailsData, isLoading: isDetailsLoading } = useQuery<IGetMoviesResult>("details", () => getDetails(getId)); // getId를 API로 넘긴다.
+    console.log(detailsData);
+
     const onOverlayClicked = () => history.push("/");
     const { scrollX, scrollY } = useViewportScroll();
     const { data, isLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getNowPlaying);
     const clickedMovie = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환)
         bigMovieMatch?.params.movieId &&
         data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-    const { data: movieDetailsData, isLoading: isMovieDetailsLoading } = useQuery<IGetMoviesResult>("movieDetails", () => getMovieDetails(bigMovieMatch?.params.movieId || "")); // useQuery hook을 2개 이상 사용할 경우 data와 isLoading에 이름을 설정한다. (중복 문제)
-    console.log(movieDetailsData);
     return (
         <Wrapper>
             {isLoading ? <Loader>Loading...</Loader> : (
