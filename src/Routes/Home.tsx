@@ -46,6 +46,7 @@ const Slider = styled.div`
     position: relative;
     top: -150px;
     margin: 0 60px;
+    margin-bottom: 190px;
 `;
 const RowTitle = styled(motion.div)`
     color: white;
@@ -200,8 +201,6 @@ function Home() {
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
     const history = useHistory(); // URL 이동
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-    // console.log(bigMovieMatch?.params.movieId);
-    // const { data: detailsData } = useQuery<IGetMoviesResult>("details", () => getDetails(movieId || "")); // API를 불러오지 못한다.. movieId에 defined가 들어가서 그런듯
     const changeIndex = (right: number) => {
         if (data) {
             if (leaving) return;
@@ -223,13 +222,14 @@ function Home() {
         }
     }
 
+    /*
     const [ getId, setGetId ] = useState(0); // movieId를 state로 관리한다.
+    const { data: detailsData, isLoading: isDetailsLoading } = useQuery<IGetMoviesResult>("details", () => getDetails(getId)); // getId를 API로 넘긴다.
+    */
     const onBoxClicked = (movieId: number) => { // 박스를 클릭할때 얻어오는 movieId를 getId에 넣어준다.
         history.push(`/movies/${movieId}`);
-        setGetId(+history.location.pathname.slice(8));
+        // setGetId(+history.location.pathname.slice(8));
     };
-    const { data: detailsData, isLoading: isDetailsLoading } = useQuery<IGetMoviesResult>("details", () => getDetails(getId)); // getId를 API로 넘긴다.
-    console.log(detailsData);
 
     const onOverlayClicked = () => history.push("/");
     const { scrollX, scrollY } = useViewportScroll();
@@ -285,6 +285,20 @@ function Home() {
                                 </Box>
                                 </>
                         ))}
+                    </Row>
+                </AnimatePresence>
+            </Slider>
+            <SliderBtnLeft onClick={() => onClickSliderBtn(-1)} whileHover={{ scale: 1.4 }}>
+                <FaChevronLeft/>
+            </SliderBtnLeft>
+            <SliderBtnRight onClick={() => onClickSliderBtn(1)} whileHover={{ scale: 1.4 }}>
+                <FaChevronRight/>
+            </SliderBtnRight>
+            <Slider>
+                <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
+                    <RowTitle> 지금 뜨는 영화 </RowTitle>
+                    <Row>
+                        
                     </Row>
                 </AnimatePresence>
             </Slider>
