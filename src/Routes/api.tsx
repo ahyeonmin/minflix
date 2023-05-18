@@ -1,7 +1,7 @@
 const API_KEY = "7d9c83b9b323d6b1153776b82e4053f9";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
-interface IMoive {
+export interface IMoive {
     backdrop_path: string;
     id: number;
     overview: string;
@@ -25,6 +25,10 @@ export interface IGetMoviesResult {
 
 export async function getNowPlaying() {
     return await (await fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR`)).json();
+}
+
+export async function getPopular() {
+    return await (await fetch(`${BASE_PATH}/movie/popular?api_key=${API_KEY}&language=ko-KR`)).json();
 }
 
 export async function getDetails(movieId: number) {
