@@ -106,7 +106,7 @@ function Home() {
         <Wrapper>
             {isNowPlayingLoading ? <Loader>Loading...</Loader> : (
                 // 배너에는 첫번쨰 항목 보여주기
-                <Banner bgPhoto={makeImagePath(nowPlayingData?.results[1].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
                     <Title>{nowPlayingData?.results[0].title}</Title>
                     <Overview>{nowPlayingData?.results[0].overview}</Overview>
                 </Banner>

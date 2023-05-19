@@ -23,11 +23,17 @@ const Buttons = styled.div`
     justify-content: space-between;
 `;
 const Button = styled(motion.button)`
+    position: absolute;
+    top: 75px;
+    z-index: 1;
     background: none;
-    color: white;
+    color: ${(props) => props.theme.white.darker};
     border: none;
     font-size: 35px;
     cursor: pointer;
+    &:nth-child(2) {
+        right: 0;
+    }
 `;
 const RowTitle = styled(motion.div)`
     color: white;
@@ -61,6 +67,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     &:hover {
         background-image: linear-gradient(to top, #141414, transparent), url(${(props) => props.bgPhoto});
     }
+
 `;
 const Info = styled(motion.div)`
     position: absolute;
@@ -75,18 +82,18 @@ const Info = styled(motion.div)`
     opacity: 0;
 `;
 
-const rowVariants = { // 사용자 화면 크기 받아오기 (=window.innerWidth)
-    hidden: (right: number) => {
+const rowVariants = { // 사용자 화면 크기 받아오기 (= window.innerWidth)
+    hidden: (custom: boolean) => {
         return {
-            x: right === 1 ? window.outerWidth : -window.outerWidth,
+            x: custom ? -window.window.outerWidth : window.outerWidth,
         };
     },
     visible: {
         x: 0,
     },
-    exit: (right: number) => {
+    exit: (custom: boolean) => {
         return {
-            x: right === 1 ? -window.outerWidth : window.outerWidth,
+            x: custom ? window.window.outerWidth : -window.outerWidth,
         };
     },
 }
@@ -116,54 +123,63 @@ const InfoVariants = {
     },
 };
 
-function Slider({ title, data}: ISlider) {
-    const [ isRight, setIsRight ] = useState(1); // left = 0, right = 1
+function Slider({ title, data }: ISlider) {
+    const [ goingback, setGoingback ] = useState(false); // 왼쪽 버튼 클릭시, 왼쪽으로 넘어가는 모션
     const [ index, setIndex ] = useState(0);
-    const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시 간격 늘어나는 문제 해결하기
+    const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시, 간격 늘어나는 문제 해결하기
+    const toggleLeaving = () => setLeaving((prev) => !prev); // 항상 true인 leaving 상태를 반전
     const history = useHistory(); // URL 이동
     const offset = 6; // 슬라이드에 보여주고 싶은 영화 개수
-    const changeIndex = (right: number) => {
+    const increaseIndex = () => { // 오른쪽 버튼!
         if (data) {
             if (leaving) return;
-            setIsRight(right);
             toggleLeaving(); // Exit이 끝나면 호출되고, leaving을 false로 바꾸기
-            const totalMovies = data?.results.length - 1; // 배너에 사용한 영화 하나 제외
-            const maxIndex = totalMovies % offset === 0 // 총 영화 개수와 보여줄 값이 딱 떨어진다면
+            setGoingback(false);
+            const totalMovies = data?.length - 1; // 배너에 사용한 영화 하나 제외
+            const maxIndex = totalMovies % offset === 0 // 총 영화 개수와 보여줄 값이 딱 떨어진다면...
                 ? Math.floor(totalMovies / offset) - 1
                     : Math.floor(totalMovies / offset);
-            right === 1 // 오른쪽 버튼: 마지막 페이지에 도달하면 되돌린다. 왼쪽 버튼: 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
-                ? setIndex((prev) => prev === maxIndex ? 0 : prev + 1)
-                    : setIndex((prev) => prev === 0 ? maxIndex : prev - 1)
+            setIndex((prev) => prev === maxIndex ? 0 : prev + 1) // 마지막 페이지에 도달하면 되돌린다.
         }
     }
-    const toggleLeaving = () => setLeaving((prev) => !prev); // 항상 true인 leaving 상태를 반전
+    const decreaseIndex = () => { // 왼쪽 버튼!
+        if (data) {
+            if (leaving) return;
+            setGoingback(true);
+            toggleLeaving(); // Exit이 끝나면 호출되고, leaving을 false로 바꾸기
+            const totalMovies = data?.length - 1; // 배너에 사용한 영화 하나 제외
+            const maxIndex = totalMovies % offset === 0 // 총 영화 개수와 보여줄 값이 딱 떨어진다면...
+                ? Math.floor(totalMovies / offset) - 1
+                    : Math.floor(totalMovies / offset);
+            setIndex((prev) => prev ===  0 ? maxIndex : prev - 1) // 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
+        }
+    }
     const onBoxClicked = (movieId: number) => { // 박스를 클릭할때 얻어오는 movieId를 getId에 넣어준다.
         history.push(`/movies/${movieId}`);
         // setGetId(+history.location.pathname.slice(8));
     };
-    const onClickBtn = (right: number) => {
-        if(!leaving) {
-            changeIndex(right);
-        }
-    }
     return (
         <Wrapper>
             {data && (
                 <>
-                <AnimatePresence initial={false} onExitComplete={toggleLeaving}> {/* 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기 */}
-                    <RowTitle> {title} </RowTitle>
+                <RowTitle> {title} </RowTitle>
+                <AnimatePresence // 새로고침시 제자리에서 시작, leaving이 항상 true인 문제 해결하기
+                    custom={goingback}
+                    initial={false}
+                    onExitComplete={toggleLeaving}
+                >
                     <Buttons>
-                        <Button whileHover={{ scale: 1.4 }}>
+                        <Button onClick={decreaseIndex} whileHover={{ scale: 1.4 }}>
                             <FaChevronLeft/>
                         </Button>
-                        <Button whileHover={{ scale: 1.4 }}>
+                        <Button onClick={increaseIndex} whileHover={{ scale: 1.4 }}>
                             <FaChevronRight/>
                         </Button>
                     </Buttons>
                     <Row
                         key={index}
                         variants={rowVariants}
-                        custom={isRight}
+                        custom={goingback}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
