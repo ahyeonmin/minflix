@@ -1,15 +1,16 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
-import { IGetMoviesResult, getDetails, getNowPlaying, getPopular } from './api';
+import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import Slider from '../Components/Slider';
 import { makeImagePath } from '../utils';
+import { useRecoilState } from "recoil";
+import { clickedBoxState } from '../Routes/atoms';
 
 const Wrapper = styled.div`
     background-color: black;
-    height: 200vh;
+    height: 170vh;
     overflow: hidden; // 초과되는 내용은 가려서 스크롤바를 없앤다
 `;
 const Loader = styled.div`
@@ -25,7 +26,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
     padding: 0 60px;
     height: 100vh;
     background-image:
-        linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8)),
+        linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
         url(${(props) => props.bgPhoto})
     ;
     background-size: cover;
@@ -34,8 +35,9 @@ const Title = styled.h2`
     margin-bottom: 20px;
     color: ${(prop) => prop.theme.white.darker};
     font-weight: 700;
-    font-size: 40px;
+    font-size: 50px;
 `;
+const Sliders = styled.div``;
 const Overview = styled.p`
     width: 50%;
     color: ${(prop) => prop.theme.white.darker};
@@ -47,7 +49,7 @@ const Overlay = styled(motion.div)`
     position: absolute;
     top: 0;
     width: 100vw;
-    height: 100vh;
+    height: 170vh;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
@@ -85,36 +87,50 @@ const BigOverview = styled.p`
     color: ${(props) => props.theme.white.darker};
 `;
 
+
 function Home() {
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-    /*
-    const [ getId, setGetId ] = useState(0); // movieId를 state로 관리한다.
-    const { data: detailsData, isLoading: isDetailsLoading } = useQuery<IGetMoviesResult>("details", () => getDetails(getId)); // getId를 API로 넘긴다.
-    */
     const { scrollX, scrollY } = useViewportScroll();
     const history = useHistory();
     const onOverlayClicked = () => history.push("/");
+    const { data: popularData, isLoading: isPopularLoading } = useQuery<IGetMoviesResult>(["movies", "popular"], getPopular);
     const { data: nowPlayingData, isLoading: isNowPlayingLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getNowPlaying);
-    const { data: popularData, isLoading } = useQuery<IGetMoviesResult>(["movies", "popular"], getPopular);
-    const clickedNowPlaying = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환)
-        bigMovieMatch?.params.movieId &&
-        nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
-    const clickedPopular =
-        bigMovieMatch?.params.movieId &&
-        popularData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    const { data: topRatedData, isLoading: isTopRatedLoading } = useQuery<IGetMoviesResult>(["movies", "topRated"], getTopRated);
+    const [ clickedBoxRecoil, setClickedBoxRecoil ] = useRecoilState(clickedBoxState);
+    const clickedBox = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환) 박스를 클릭했을 때 movieId 반환
+        bigMovieMatch?.params.movieId && (
+            popularData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
+                nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
+                    topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
+    );
+    setClickedBoxRecoil(clickedBox);
     return (
         <Wrapper>
-            {isNowPlayingLoading ? <Loader>Loading...</Loader> : (
-                // 배너에는 첫번쨰 항목 보여주기
-                <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
-                    <Title>{nowPlayingData?.results[0].title}</Title>
-                    <Overview>{nowPlayingData?.results[0].overview}</Overview>
-                </Banner>
+            {isNowPlayingLoading || isPopularLoading || isTopRatedLoading
+                ? <Loader>로딩 중...</Loader> : (
+                    // 배너에는 첫번쨰 항목 보여주기
+                    <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                        <Title>{nowPlayingData?.results[0].title}</Title>
+                        <Overview>{nowPlayingData?.results[0].overview}</Overview>
+                    </Banner>
             )}
-            <Slider
-                title="새로 올라온 영화"
-                data={nowPlayingData?.results}
-            />
+            <Sliders>
+                <Slider
+                    title="지금 뜨는 영화"
+                    data={popularData?.results}
+                    sliderId="popular"
+                />
+                <Slider
+                    title="새로 올라온 영화"
+                    data={nowPlayingData?.results}
+                    sliderId="nowPlaying"
+                />
+                <Slider
+                    title="평단의 찬사를 받은 영화"
+                    data={topRatedData?.results}
+                    sliderId="topRated"
+                />
+            </Sliders>
             <AnimatePresence>
                 {bigMovieMatch ? (
                     <>
@@ -127,17 +143,17 @@ function Home() {
                             layoutId={bigMovieMatch.params.movieId}
                             style={{ top: scrollY.get() + 50 }} // 스크롤을 해도 따라오도록 하기 (값을 넣으면 위치가 고정됨), get()으로 실제값을 받아옴
                         >
-                            {clickedNowPlaying &&
+                            {clickedBox &&
                                 <>
                                     <BigCover
                                         style={{
                                             backgroundImage:
                                                 `linear-gradient(to top, #141414, transparent),
-                                                url(${makeImagePath(clickedNowPlaying.backdrop_path)})`,
+                                                url(${makeImagePath(clickedBox.backdrop_path)})`,
                                         }}
                                     />
-                                    <BigTitle>{clickedNowPlaying.title}</BigTitle>
-                                    <BigOverview>{clickedNowPlaying.overview}</BigOverview>
+                                    <BigTitle>{clickedBox.title}</BigTitle>
+                                    <BigOverview>{clickedBox.overview}</BigOverview>
                                 </>
                             }
                         </BigMovie>

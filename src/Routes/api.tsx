@@ -31,6 +31,10 @@ export async function getPopular() {
     return await (await fetch(`${BASE_PATH}/movie/popular?api_key=${API_KEY}&language=ko-KR`)).json();
 }
 
+export async function getTopRated() {
+    return await (await fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}&language=ko-KR`)).json();
+}
+
 export async function getDetails(movieId: number) {
     return await (await fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`)).json();
 }

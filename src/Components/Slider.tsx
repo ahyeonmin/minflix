@@ -9,6 +9,7 @@ import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
 interface ISlider {
     title: string;
     data: any;
+    sliderId: string;
 }
 
 const Wrapper = styled.div`
@@ -48,11 +49,11 @@ const Row = styled(motion.div)`
     gap: 5px;
 `;
 const Box = styled(motion.div)<{ bgPhoto: string }>`
-    width: 100%;
-    height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 130px;
     border-radius: 3px;
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
@@ -123,7 +124,7 @@ const InfoVariants = {
     },
 };
 
-function Slider({ title, data }: ISlider) {
+function Slider({ title, data, sliderId }: ISlider) {
     const [ goingback, setGoingback ] = useState(false); // 왼쪽 버튼 클릭시, 왼쪽으로 넘어가는 모션
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시, 간격 늘어나는 문제 해결하기
@@ -192,7 +193,7 @@ function Slider({ title, data }: ISlider) {
                                 <>
                                 <Box
                                     key={movie.id}
-                                    layoutId={movie.id + ""} // 문자열로 변환
+                                    layoutId={sliderId + "_" + (movie.id + "")} // 다른 데이터와 겹치는 영화를 구분하기 위해 sliderId 추가, id는 문자열로 변환
                                     onClick={() => onBoxClicked(movie.id)}
                                     variants={boxVariants}
                                     initial="normal"

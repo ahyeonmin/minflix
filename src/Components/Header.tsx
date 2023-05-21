@@ -9,6 +9,7 @@ interface IForm {
 }
 
 const Nav = styled(motion.nav)`
+    z-index: 99;
     background-color: black;
     display: flex;
     justify-content: space-between;
