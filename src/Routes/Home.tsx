@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
-import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
+import { AnimatePresence, motion, useScroll } from 'framer-motion';
 import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import Slider from '../Components/Slider';
-import { makeImagePath } from '../utils';
 import { useRecoilState } from "recoil";
-import { clickedBoxState } from '../Routes/atoms';
+import { movieDetailState } from '../Routes/atoms';
+import Slider from '../Components/Slider';
+import Details from '../Components/Details';
+import { makeImagePath } from '../utils';
 
 const Wrapper = styled.div`
     background-color: black;
@@ -63,47 +64,24 @@ const BigMovie = styled(motion.div)`
     background-color: ${(props) => props.theme.black.veryDark};
     border-radius: 7px;
 `;
-const BigCover = styled.div`
-    width: 100%;
-    height: 400px;
-    background-size: cover;
-    background-position: center center;
-`;
-const BigTitle = styled.h3`
-    position: relative;
-    top: -70px;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: 600;
-    color: ${(props) => props.theme.white.lighter};
-`;
-const BigOverview = styled.p`
-    position: relative;
-    top: -70px;
-    width: 70%;
-    padding: 20px;
-    font-size: 14px;
-    line-height: 18px;
-    color: ${(props) => props.theme.white.darker};
-`;
 
 
 function Home() {
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-    const { scrollX, scrollY } = useViewportScroll();
+    const { scrollY } = useScroll();
     const history = useHistory();
     const onOverlayClicked = () => history.push("/");
     const { data: popularData, isLoading: isPopularLoading } = useQuery<IGetMoviesResult>(["movies", "popular"], getPopular);
     const { data: nowPlayingData, isLoading: isNowPlayingLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getNowPlaying);
     const { data: topRatedData, isLoading: isTopRatedLoading } = useQuery<IGetMoviesResult>(["movies", "topRated"], getTopRated);
-    const [ clickedBoxRecoil, setClickedBoxRecoil ] = useRecoilState(clickedBoxState);
+    const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     const clickedBox = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환) 박스를 클릭했을 때 movieId 반환
         bigMovieMatch?.params.movieId && (
             popularData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                 nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                     topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
     );
-    setClickedBoxRecoil(clickedBox);
+    setMovieDetail(clickedBox);
     return (
         <Wrapper>
             {isNowPlayingLoading || isPopularLoading || isTopRatedLoading
@@ -143,19 +121,7 @@ function Home() {
                             layoutId={bigMovieMatch.params.movieId}
                             style={{ top: scrollY.get() + 50 }} // 스크롤을 해도 따라오도록 하기 (값을 넣으면 위치가 고정됨), get()으로 실제값을 받아옴
                         >
-                            {clickedBox &&
-                                <>
-                                    <BigCover
-                                        style={{
-                                            backgroundImage:
-                                                `linear-gradient(to top, #141414, transparent),
-                                                url(${makeImagePath(clickedBox.backdrop_path)})`,
-                                        }}
-                                    />
-                                    <BigTitle>{clickedBox.title}</BigTitle>
-                                    <BigOverview>{clickedBox.overview}</BigOverview>
-                                </>
-                            }
+                            <Details />
                         </BigMovie>
                     </>
                 ) : null}

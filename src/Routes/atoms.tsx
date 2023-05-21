@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const clickedBoxState = atom<any>({
-    key: "clickedBoxState",
+export const movieDetailState = atom<any>({
+    key: "movieDetail",
     default: "",
 });
