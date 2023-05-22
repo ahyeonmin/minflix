@@ -1,7 +1,7 @@
 const API_KEY = "7d9c83b9b323d6b1153776b82e4053f9";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
-export interface IMoive {
+export interface IMovie {
     backdrop_path: string;
     id: number;
     overview: string;
@@ -10,6 +10,13 @@ export interface IMoive {
     original_title: string;
     original_name: string;
     tagline: string;
+    release_date: string;
+    runtime: number;
+    vote_average: number;
+    genres: {
+		id: number;
+		name: string;
+	}[];
 }
 
 export interface IGetMoviesResult {
@@ -18,7 +25,7 @@ export interface IGetMoviesResult {
         minimum: number;
     },
     page: number;
-    results: IMoive[];
+    results: IMovie[];
     total_pages: number;
     total_results: number;
 }

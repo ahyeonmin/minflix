@@ -43,6 +43,7 @@ const Overview = styled.p`
     width: 50%;
     color: ${(prop) => prop.theme.white.darker};
     font-size: 16px;
+    font-weight: 300;
     line-height: 22px;
 `;
 
