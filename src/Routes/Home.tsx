@@ -8,6 +8,7 @@ import { movieDetailState } from '../Routes/atoms';
 import Slider from '../Components/Slider';
 import Details from '../Components/Details';
 import { makeImagePath } from '../utils';
+import { clickedSliderState } from '../Routes/atoms';
 
 const Wrapper = styled.div`
     background-color: black;
@@ -56,6 +57,7 @@ const Overlay = styled(motion.div)`
     opacity: 0;
 `;
 const BigMovie = styled(motion.div)`
+    z-index: 99;
     position: absolute;
     left: 0;
     right: 0;
@@ -68,6 +70,8 @@ const BigMovie = styled(motion.div)`
 
 
 function Home() {
+    const [ clickedSlider, setClickedSlider ] = useRecoilState(clickedSliderState);
+    console.log(clickedSlider);
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
     const { scrollY } = useScroll();
     const history = useHistory();
@@ -119,8 +123,8 @@ function Home() {
                             exit={{ opacity: 0 }}
                         />
                         <BigMovie
-                            layoutId={bigMovieMatch.params.movieId}
                             style={{ top: scrollY.get() + 50 }} // 스크롤을 해도 따라오도록 하기 (값을 넣으면 위치가 고정됨), get()으로 실제값을 받아옴
+                            layoutId={clickedSlider + "_" + bigMovieMatch.params.movieId} // Slider와 layoutId 연결
                         >
                             <Details />
                         </BigMovie>

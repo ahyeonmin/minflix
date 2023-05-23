@@ -6,13 +6,18 @@ import { IMovie, getDetails } from '../Routes/api';
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 
-const Wrapper = styled.div``;
+interface IDetails {
+    sliderId: string;
+}
 
+const Wrapper = styled.div`
+`;
 const Cover = styled.div`
     width: 100%;
     height: 400px;
     background-size: cover;
     background-position: center center;
+    border-radius: 7px;
 `;
 const Title = styled.h3`
     position: relative;
@@ -24,14 +29,15 @@ const Title = styled.h3`
 `;
 const Tagline = styled.h4`
     position: relative;
-    top: -95px;
+    top: -98px;
     padding: 20px;
     font-size: 14px;
+    font-weight: 300;
     color: ${(props) => props.theme.white.darker};
 `;
 const InfoWrapper = styled.div`
     position: relative;
-    top: -110px;
+    top: -115px;
     padding: 20px;
     display: flex;
 `;
@@ -46,7 +52,7 @@ const Info = styled.div`
 `;
 const Overview = styled.p`
     position: relative;
-    top: -140px;
+    top: -145px;
     padding: 20px;
     font-size: 14px;
     font-weight: 300;
@@ -58,7 +64,6 @@ function Details() {
     const [ movieDetail ] = useRecoilState(movieDetailState);
     const detailsId = parseInt(movieDetail && movieDetail.id);
     const { data } = useQuery<IMovie>("details", () => getDetails(detailsId));
-    console.log(data);
     return (
         <Wrapper>
             {movieDetail && (

@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { makeImagePath } from '../utils';
 import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
+import { useRecoilState } from "recoil";
+import { clickedSliderState } from "../Routes/atoms";
 
 interface ISlider {
     title: string;
@@ -125,6 +127,7 @@ const InfoVariants = {
 };
 
 function Slider({ title, data, sliderId }: ISlider) {
+    const [ clickedSlider, setClickedSlider ] = useRecoilState(clickedSliderState);
     const [ goingback, setGoingback ] = useState(false); // 왼쪽 버튼 클릭시, 왼쪽으로 넘어가는 모션
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시, 간격 늘어나는 문제 해결하기
@@ -155,9 +158,9 @@ function Slider({ title, data, sliderId }: ISlider) {
             setIndex((prev) => prev ===  0 ? maxIndex : prev - 1) // 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
         }
     }
-    const onBoxClicked = (movieId: number) => { // 박스를 클릭할때 얻어오는 movieId를 getId에 넣어준다.
+    const onBoxClicked = (movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
+        setClickedSlider(sliderId);
         history.push(`/movies/${movieId}`);
-        // setGetId(+history.location.pathname.slice(8));
     };
     return (
         <Wrapper>
@@ -198,7 +201,7 @@ function Slider({ title, data, sliderId }: ISlider) {
                                     variants={boxVariants}
                                     initial="normal"
                                     whileHover="hover"
-                                    transition={{ type: "tween" }}
+                                    transition={{ type: "tween", duration: 0.5 }}
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}
