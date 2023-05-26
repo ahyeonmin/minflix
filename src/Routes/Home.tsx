@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
 import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
@@ -39,7 +40,6 @@ const Title = styled.h2`
     font-weight: 700;
     font-size: 50px;
 `;
-const Sliders = styled.div``;
 const Overview = styled.p`
     width: 50%;
     color: ${(prop) => prop.theme.white.darker};
@@ -47,7 +47,7 @@ const Overview = styled.p`
     font-weight: 300;
     line-height: 22px;
 `;
-
+const Sliders = styled.div``;
 const Overlay = styled(motion.div)`
     position: absolute;
     top: 0;
@@ -64,7 +64,6 @@ const BigMovie = styled(motion.div)`
     margin: 0 auto;
     width: 40vw;
     height: 85vh;
-    background-color: ${(props) => props.theme.black.veryDark};
     border-radius: 7px;
 `;
 
@@ -87,6 +86,11 @@ function Home() {
                     topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
     );
     setMovieDetail(clickedBox);
+    useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
+		bigMovieMatch
+			? (document.body.style.overflowY = "hidden")
+			: (document.body.style.overflowY = "auto");
+	}, [bigMovieMatch]);
     return (
         <Wrapper>
             {isNowPlayingLoading || isPopularLoading || isTopRatedLoading
