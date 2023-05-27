@@ -2,15 +2,13 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { movieDetailState } from "../Routes/atoms";
 import { useQuery } from "react-query";
+import { motion } from "framer-motion";
 import { IMovie, getDetails } from '../Routes/api';
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
+import { useEffect } from "react";
 
-interface IDetails {
-    sliderId: string;
-}
-
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
 `;
 const Cover = styled.div`
     width: 100%;
@@ -63,7 +61,7 @@ const Overview = styled.p`
 function Details() {
     const [ movieDetail ] = useRecoilState(movieDetailState);
     const detailsId = parseInt(movieDetail && movieDetail.id);
-    const { data } = useQuery<IMovie>("details", () => getDetails(detailsId));
+    const { data } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     return (
         <Wrapper>
             {movieDetail && (
@@ -81,7 +79,7 @@ function Details() {
                         <InfoWrapper>
                             <Info style={{ position: "relative", top: "-1px", color: "#45d369" }}>
                                 <FaStar style={{ paddingRight: "3px" }}/>
-                                {data && data?.vote_average.toFixed(1)}
+                                {data?.vote_average.toFixed(1)}
                             </Info>
                             <Info> · </Info>
                             <Info> {data?.release_date.slice(0, 4)} </Info>

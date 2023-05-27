@@ -201,7 +201,7 @@ function Slider({ title, data, sliderId }: ISlider) {
                                     variants={boxVariants}
                                     initial="normal"
                                     whileHover="hover"
-                                    transition={{ type: "tween", duration: 0.5 }}
+                                    transition={{ type: "tween", duration: 0.3 }}
                                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}

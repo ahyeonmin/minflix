@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
 import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
 import Slider from '../Components/Slider';
@@ -65,12 +65,12 @@ const BigMovie = styled(motion.div)`
     width: 40vw;
     height: 85vh;
     border-radius: 7px;
+    background-color: ${(props) => props.theme.black.darker};
 `;
 
 
 function Home() {
     const [ clickedSlider, setClickedSlider ] = useRecoilState(clickedSliderState);
-    console.log(clickedSlider);
     const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
     const { scrollY } = useScroll();
     const history = useHistory();
