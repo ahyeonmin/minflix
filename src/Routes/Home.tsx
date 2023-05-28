@@ -12,7 +12,7 @@ import { makeImagePath } from '../utils';
 import { clickedSliderState } from '../Routes/atoms';
 
 const Wrapper = styled.div`
-    background-color: black;
+    background-color: ${(props) => props.theme.black.veryDark};
     height: 170vh;
     overflow: hidden; // 초과되는 내용은 가려서 스크롤바를 없앤다
 `;
@@ -29,9 +29,8 @@ const Banner = styled.div<{ bgPhoto: string }>`
     padding: 0 60px;
     height: 100vh;
     background-image:
-        linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-        url(${(props) => props.bgPhoto})
-    ;
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0), rgba(0, 0, 0, 0), rgba(20, 20, 20, 1)),
+        url(${(props) => props.bgPhoto});
     background-size: cover;
 `;
 const Title = styled.h2`
@@ -44,7 +43,7 @@ const Overview = styled.p`
     width: 50%;
     color: ${(prop) => prop.theme.white.darker};
     font-size: 16px;
-    font-weight: 300;
+    font-weight: lighter;
     line-height: 22px;
 `;
 const Sliders = styled.div``;

@@ -56,6 +56,18 @@ const GlobalStyled = createGlobalStyle`
     text-decoration: none;
     color: inherit; // 부모 색상 받기
   }
+  html::-webkit-scrollbar {
+    width: 1rem;
+  }
+  html::-webkit-scrollbar-thumb {
+    background-color: #666666;
+		border-radius: 1rem;
+		background-clip: padding-box;
+		border: 0.3rem solid transparent;
+  }
+  html::-webkit-scrollbar-track {
+    background-color: #141414;
+  }
 `;
 
 const client = new QueryClient();

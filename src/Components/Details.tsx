@@ -30,7 +30,7 @@ const Tagline = styled.h4`
     top: -98px;
     padding: 20px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: lighter;
     color: ${(props) => props.theme.white.darker};
 `;
 const InfoWrapper = styled.div`
@@ -53,7 +53,7 @@ const Overview = styled.p`
     top: -145px;
     padding: 20px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: lighter;
     line-height: 18px;
     color: ${(props) => props.theme.white.darker};
 `;

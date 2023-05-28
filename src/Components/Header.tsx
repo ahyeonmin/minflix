@@ -10,7 +10,6 @@ interface IForm {
 
 const Nav = styled(motion.nav)`
     z-index: 98;
-    background-color: black;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -64,16 +63,24 @@ const Search = styled.form `
     display: flex;
     align-items: center;
     padding-right: 60px;
-    color: white;
+    color: ${(props) => props.theme.white.lighter};
     svg { height: 25px; };
     :hover {
         cursor: pointer;
     }
 `;
 const Input = styled(motion.input)`
+    width: 160px;
     transform-origin: right; // 변화가 시작하는 위치
     position: absolute;
     left: -150px;
+    background: ${(props) => props.theme.black.lighter};
+    border: ${(props) => props.theme.white.lighter} 1px solid;
+    padding: 8px;
+    padding-right: 20px;
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 14px;
+    outline: none;
 `;
 
 const logoVariants = {
@@ -92,7 +99,7 @@ const navVariants = {
         backgroundColor: "rgba(0, 0, 0, 0)",
     },
     scroll: {
-        backgroundColor: "rgba(0, 0, 0, 1)",
+        backgroundColor: "rgba(20, 20, 20, 1)",
     },
 }
 
@@ -171,7 +178,7 @@ function Header() {
                         initial={false} // 새로고침시 제자리에서 시작
                         animate={{ scaleX: searchOpen ? 1 : 0 }} // 클릭: 검색입력창 보여주기/닫기
                         transition={{ type: "linear" }}
-                        placeholder='영화, 시리즈를 검색하세요.'
+                        placeholder='영화/시리즈를 검색해보세요.'
                     />
                 </Search>
             </Col>
