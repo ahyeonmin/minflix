@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
 import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
-import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
 import Slider from '../Components/Slider';
@@ -35,13 +35,13 @@ const Banner = styled.div<{ bgPhoto: string }>`
 `;
 const Title = styled.h2`
     margin-bottom: 20px;
-    color: ${(prop) => prop.theme.white.darker};
+    color: ${(prop) => prop.theme.white.lighter};
     font-weight: 700;
     font-size: 50px;
 `;
 const Overview = styled.p`
     width: 50%;
-    color: ${(prop) => prop.theme.white.darker};
+    color: ${(prop) => prop.theme.white.lighter};
     font-size: 16px;
     font-weight: lighter;
     line-height: 22px;

@@ -1,6 +1,24 @@
 const API_KEY = "7d9c83b9b323d6b1153776b82e4053f9";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
+export interface ICast {
+    name: string;
+    profile_path: string;
+    character: string;
+}
+
+export interface ICrew {
+    department: string;
+}
+
+export interface ICredits {
+    id: number;
+    cast: ICast[];
+    crew: {
+        department: ICrew[];
+    }
+}
+
 export interface IMovie {
     backdrop_path: string;
     id: number;
@@ -17,6 +35,7 @@ export interface IMovie {
 		id: number;
 		name: string;
 	}[];
+    profile_path: string;
 }
 
 export interface IGetMoviesResult {
@@ -44,6 +63,10 @@ export async function getTopRated() {
 
 export async function getDetails(movieId: number) {
     return await (await fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`)).json();
+}
+
+export async function getCredits(movieId: number) {
+    return await (await fetch(`${BASE_PATH}/movie/${movieId}/credits?api_key=${API_KEY}&language=ko-KR`)).json();
 }
 
 export async function getSearch(keyword: string) {

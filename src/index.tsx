@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { theme } from './theme';
@@ -56,16 +55,16 @@ const GlobalStyled = createGlobalStyle`
     text-decoration: none;
     color: inherit; // 부모 색상 받기
   }
-  html::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     width: 1rem;
   }
-  html::-webkit-scrollbar-thumb {
+  body::-webkit-scrollbar-thumb {
     background-color: #666666;
 		border-radius: 1rem;
 		background-clip: padding-box;
-		border: 0.3rem solid transparent;
+		border: 0.25rem solid transparent;
   }
-  html::-webkit-scrollbar-track {
+  body::-webkit-scrollbar-track {
     background-color: #141414;
   }
 `;
