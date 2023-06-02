@@ -1,22 +1,22 @@
 const API_KEY = "7d9c83b9b323d6b1153776b82e4053f9";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
+export interface ICrew {
+    known_for_department: string;
+    name: string;
+    profile_path: string;
+}
+
 export interface ICast {
     name: string;
     profile_path: string;
     character: string;
 }
 
-export interface ICrew {
-    department: string;
-}
-
 export interface ICredits {
     id: number;
     cast: ICast[];
-    crew: {
-        department: ICrew[];
-    }
+    crew: ICrew[];
 }
 
 export interface IMovie {
@@ -68,6 +68,10 @@ export async function getDetails(movieId: number) {
 export async function getCredits(movieId: number) {
     return await (await fetch(`${BASE_PATH}/movie/${movieId}/credits?api_key=${API_KEY}&language=ko-KR`)).json();
 }
+
+export async function getSimilar(movieId: number) {
+    return await (await fetch(`${BASE_PATH}/movie/${movieId}/similar?api_key=${API_KEY}&language=ko-KR`)).json();
+} 
 
 export async function getSearch(keyword: string) {
     return await (await fetch(`${BASE_PATH}search/multi?api_key=${API_KEY}&language=ko-KR&query=${keyword}&page=1&include_adult=false`)).json();
