@@ -4,15 +4,17 @@ import { movieDetailState } from "../Routes/atoms";
 import { useQuery } from "react-query";
 import { motion } from "framer-motion";
 import { IGetMoviesResult, ICredits, IMovie, getCredits, getSimilar, getDetails } from '../Routes/api';
+import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
+import { useEffect } from "react";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
     height: 100%;
     overflow-y: scroll;
     &::-webkit-scrollbar {
-    width: 1rem;
+        width: 1rem;
     }
     &::-webkit-scrollbar-thumb {
         background-color: #666666;
@@ -72,6 +74,7 @@ const Credits = styled.div`
     position: relative;
     top: -145px;
     padding: 20px;
+    color: ${(props) => props.theme.white.lighter};
     font-size: 14px;
 `;
 const InfoTitle = styled.div`
@@ -134,8 +137,9 @@ const CreditsCharacter = styled.div`
     font-weight: lighter;
 `;
 const Similar = styled.div`
+    height: 43%;
     position: relative;
-    top: -145px;
+    top: -160px;
     padding: 20px;
 `;
 const SimilarContainer = styled.div`
@@ -156,14 +160,20 @@ const SimilarContainer = styled.div`
         background-color: #141414;
     }
 `;
-const SimilarBox = styled.div`
+const SimilarBox = styled(motion.div)`
     width: 230px;
-    height: 250px;
+    height: 170px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 26px;
+    background-color: ${(props) => props.theme.black.lighter};
     border-radius: 5px;
-    background-color: ${(prop) => prop.theme.black.lighter};
+    cursor: pointer;
+    &:hover {
+        div {
+            color: #666666;
+        }
+    }
 `;
 const SimilarImg = styled.div<{bgPhoto: string}>`
     width: 100%;
@@ -171,35 +181,36 @@ const SimilarImg = styled.div<{bgPhoto: string}>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
-    border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    margin-right: 7px;
+    border-top-left-radius: 5px;
 `;
 const SimilarNoImg = styled.div`
     background-color: #0e0e0e;
     height: 130px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
     font-size: 12px;
 `;
 const SimilarTitle = styled.div`
-    padding: 18px 10px 10px 10px;
-    font-size: 15px;
-`;
-const SimilarInfoBox = styled.div`
-    display: flex;
-    padding: 0 10px;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 14px;
+    transition: 0.3s;
 `;
 
 function Details() {
+    const history = useHistory();
     const [ movieDetail ] = useRecoilState(movieDetailState);
     const detailsId = parseInt(movieDetail && movieDetail.id);
     const { data: detailsData } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getCredits(detailsId));
     const { data: similarData } = useQuery<IGetMoviesResult>(["similar", detailsId], () => getSimilar(detailsId));
+    const onSimilarBoxClicked = (movieId: number) => {
+        history.push(`/movies/${movieId}`);
+    };
     return (
         <Wrapper>
             {movieDetail && (
@@ -245,7 +256,7 @@ function Details() {
                                     </CreditsBox>
                                 ))}
                             </CreditsContainer>
-                            <InfoTitle> 출연 </InfoTitle>
+                            <InfoTitle style={{ paddingTop: "20px"}}> 출연 </InfoTitle>
                             <CreditsContainer>
                                 {creditsData?.cast.slice(0, 20).map((movie) => (
                                     <CreditsBox>
@@ -262,15 +273,11 @@ function Details() {
                             <InfoTitle> 함께 시청된 영화 </InfoTitle>
                             <SimilarContainer>
                                 {similarData?.results.slice(0, 20).map((movie) => (
-                                    <SimilarBox>
+                                    <SimilarBox
+                                        onClick={() => onSimilarBoxClicked(movie.id)}
+                                    >
                                         {movie.backdrop_path ? <SimilarImg bgPhoto={makeImagePath(movie.backdrop_path)} /> : <SimilarNoImg> 이미지 없음 </SimilarNoImg>}
-                                        <SimilarTitle> {movie.title} </SimilarTitle>
-                                        <SimilarInfoBox>
-                                            <Info style={{ position: "relative", top: "-1px", color: "#45d369" }}>
-                                                <FaStar style={{ paddingRight: "3px" }}/>
-                                                {movie?.vote_average.toFixed(1)}
-                                            </Info>
-                                        </SimilarInfoBox>
+                                        <SimilarTitle> {movie.title}</SimilarTitle>
                                     </SimilarBox>
                                 ))}
                             </SimilarContainer>

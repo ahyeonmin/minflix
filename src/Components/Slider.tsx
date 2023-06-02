@@ -193,7 +193,6 @@ function Slider({ title, data, sliderId }: ISlider) {
                             .slice(1)
                             .slice(offset*index, offset*index+offset)
                             .map((movie: any) => (
-                                <>
                                 <Box
                                     key={movie.id}
                                     layoutId={sliderId + "_" + (movie.id + "")} // 다른 데이터와 겹치는 영화를 구분하기 위해 sliderId 추가, id는 문자열로 변환
@@ -208,7 +207,6 @@ function Slider({ title, data, sliderId }: ISlider) {
                                         <div>{movie.title}</div>
                                     </Info>
                                 </Box>
-                                </>
                         ))}
                     </Row>
                 </AnimatePresence>
