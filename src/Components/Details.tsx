@@ -7,7 +7,7 @@ import { IGetMoviesResult, ICredits, IMovie, getCredits, getSimilar, getDetails 
 import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
-import { useEffect } from "react";
+import { VscClose } from "react-icons/vsc";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -32,6 +32,18 @@ const Cover = styled.div`
     background-size: cover;
     background-position: center center;
     border-top-left-radius: 7px;
+`;
+const CloseBtn = styled.div`
+    position: relative;
+    top: 10px;
+    left: 520px;
+    width: 25px;
+    height: 25px;
+    background-color: ${(props) => props.theme.black.darker};
+    border-radius: 50%;
+    padding: 3px;
+    font-size: 25px;
+    cursor: pointer;
 `;
 const Title = styled.h3`
     position: relative;
@@ -208,6 +220,9 @@ function Details() {
     const { data: detailsData } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getCredits(detailsId));
     const { data: similarData } = useQuery<IGetMoviesResult>(["similar", detailsId], () => getSimilar(detailsId));
+    const onCloseBtnClicked = () => {
+        history.push(`/`);
+    }
     const onSimilarBoxClicked = (movieId: number) => {
         history.push(`/movies/${movieId}`);
     };
@@ -221,7 +236,11 @@ function Details() {
                                 `linear-gradient(to top, #181818, transparent),
                                 url(${makeImagePath(movieDetail.backdrop_path)})`,
                         }}
-                    />
+                    >
+                        <CloseBtn onClick={onCloseBtnClicked}>
+                            <VscClose />
+                        </CloseBtn>
+                    </Cover>
                     <>
                         <Title> {detailsData?.title} </Title>
                         <Tagline>  {detailsData?.tagline} </Tagline>

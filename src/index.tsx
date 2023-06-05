@@ -66,6 +66,7 @@ const GlobalStyled = createGlobalStyle`
   }
   body::-webkit-scrollbar-track {
     background-color: #141414;
+    border-radius: 1rem;
   }
 `;
 
