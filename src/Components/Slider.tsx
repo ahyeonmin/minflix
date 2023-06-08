@@ -6,7 +6,8 @@ import { motion } from 'framer-motion';
 import { makeImagePath } from '../utils';
 import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
 import { useRecoilState } from "recoil";
-import { clickedSliderState } from "../Routes/atoms";
+import { clickedSliderState, movieDetailState } from "../Routes/atoms";
+import { IMovie } from "../Routes/api";
 
 interface ISlider {
     title: string;
@@ -128,6 +129,7 @@ const InfoVariants = {
 
 function Slider({ title, data, sliderId }: ISlider) {
     const [ clickedSlider, setClickedSlider ] = useRecoilState(clickedSliderState);
+    const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     const [ goingback, setGoingback ] = useState(false); // 왼쪽 버튼 클릭시, 왼쪽으로 넘어가는 모션
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시, 간격 늘어나는 문제 해결하기
@@ -139,7 +141,7 @@ function Slider({ title, data, sliderId }: ISlider) {
             if (leaving) return;
             toggleLeaving(); // Exit이 끝나면 호출되고, leaving을 false로 바꾸기
             setGoingback(false);
-            const totalMovies = data?.length - 1; // 배너에 사용한 영화 하나 제외
+            const totalMovies = data?.length - 2; // 배너에 사용한 영화 하나 제외
             const maxIndex = totalMovies % offset === 0 // 총 영화 개수와 보여줄 값이 딱 떨어진다면...
                 ? Math.floor(totalMovies / offset) - 1
                     : Math.floor(totalMovies / offset);
@@ -158,9 +160,10 @@ function Slider({ title, data, sliderId }: ISlider) {
             setIndex((prev) => prev ===  0 ? maxIndex : prev - 1) // 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
         }
     }
-    const onBoxClicked = (movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
+    const onBoxClicked = (contentData: IMovie, movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
         setClickedSlider(sliderId);
-        history.push(`/movies/${movieId}`);
+        setMovieDetail(contentData);
+        history.push(`/movies/${movieId}`);;
     };
     return (
         <Wrapper>
@@ -196,7 +199,7 @@ function Slider({ title, data, sliderId }: ISlider) {
                                 <Box
                                     key={movie.id}
                                     layoutId={sliderId + "_" + (movie.id + "")} // 다른 데이터와 겹치는 영화를 구분하기 위해 sliderId 추가, id는 문자열로 변환
-                                    onClick={() => onBoxClicked(movie.id)}
+                                    onClick={() => onBoxClicked(movie, movie.id)}
                                     variants={boxVariants}
                                     initial="normal"
                                     whileHover="hover"

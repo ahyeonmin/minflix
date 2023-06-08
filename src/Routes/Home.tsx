@@ -103,8 +103,9 @@ function Home() {
             <Sliders>
                 <Slider
                     title="지금 뜨는 영화"
-                    data={popularData?.results}
+                    data={popularData?.results.reverse()}
                     sliderId="popular"
+                    
                 />
                 <Slider
                     title="새로 올라온 영화"

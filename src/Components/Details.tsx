@@ -35,7 +35,7 @@ const Cover = styled.div`
 `;
 const CloseBtn = styled.div`
     position: relative;
-    top: 10px;
+    top: 15px;
     left: 520px;
     width: 25px;
     height: 25px;
@@ -215,17 +215,19 @@ const SimilarTitle = styled.div`
 
 function Details() {
     const history = useHistory();
-    const [ movieDetail ] = useRecoilState(movieDetailState);
-    const detailsId = parseInt(movieDetail && movieDetail.id);
+    const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
+    var detailsId = parseInt(movieDetail && movieDetail.id);
     const { data: detailsData } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getCredits(detailsId));
     const { data: similarData } = useQuery<IGetMoviesResult>(["similar", detailsId], () => getSimilar(detailsId));
     const onCloseBtnClicked = () => {
         history.push(`/`);
     }
-    const onSimilarBoxClicked = (movieId: number) => {
-        history.push(`/movies/${movieId}`);
-    };
+    const onSimilarBoxClicked = (contentData: IMovie, movieId: number) => (
+        setMovieDetail(null),
+        detailsId = movieId, // API에 보낼 detailsId를 movieId와 일치시킨 후 푸쉬해보자...
+        history.push(`/movies/${detailsId}`) // 응 안됨 정상적으로 안넘어가고 NaN값으로 넘겨져서 에러남
+    );
     return (
         <Wrapper>
             {movieDetail && (
@@ -293,7 +295,8 @@ function Details() {
                             <SimilarContainer>
                                 {similarData?.results.slice(0, 20).map((movie) => (
                                     <SimilarBox
-                                        onClick={() => onSimilarBoxClicked(movie.id)}
+                                        key={movie.id}
+                                        onClick={() => onSimilarBoxClicked(movie, movie.id)}
                                     >
                                         {movie.backdrop_path ? <SimilarImg bgPhoto={makeImagePath(movie.backdrop_path)} /> : <SimilarNoImg> 이미지 없음 </SimilarNoImg>}
                                         <SimilarTitle> {movie.title}</SimilarTitle>
