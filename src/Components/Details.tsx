@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
-import { useEffect } from "react";
+import Similar from "./Similar";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -45,6 +45,10 @@ const CloseBtn = styled.div`
     padding: 3px;
     font-size: 25px;
     cursor: pointer;
+    &:hover {
+        background-color: #18181892;
+        transition: 0.1s;
+    }
 `;
 const Title = styled.h3`
     position: relative;
@@ -149,69 +153,11 @@ const CreditsCharacter = styled.div`
     font-size: 12px;
     font-weight: lighter;
 `;
-const Similar = styled.div`
+const SimilarWrapper = styled.div`
     height: 43%;
     position: relative;
     top: -160px;
     padding: 20px;
-`;
-const SimilarContainer = styled.div`
-    height: 400px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-    width: 1rem;
-    }
-    &::-webkit-scrollbar-thumb {
-        background-color: #666666;
-		border-radius: 1rem;
-		background-clip: padding-box;
-		border: 0.25rem solid transparent;
-    }
-    &::-webkit-scrollbar-track {
-        background-color: #141414;
-    }
-`;
-const SimilarBox = styled(motion.div)`
-    width: 230px;
-    height: 170px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 26px;
-    background-color: ${(props) => props.theme.black.lighter};
-    border-radius: 5px;
-    cursor: pointer;
-    &:hover {
-        div {
-            color: #666666;
-        }
-    }
-`;
-const SimilarImg = styled.div<{bgPhoto: string}>`
-    width: 100%;
-    height: 130px;
-    background-image: url(${(props) => props.bgPhoto});
-    background-size: cover;
-    background-position: center center;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-`;
-const SimilarNoImg = styled.div`
-    background-color: #0e0e0e;
-    height: 130px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    font-size: 12px;
-`;
-const SimilarTitle = styled.div`
-    padding: 15px 0;
-    text-align: center;
-    font-size: 14px;
-    transition: 0.3s;
 `;
 
 function Details() {
@@ -247,14 +193,16 @@ function Details() {
                                 <FaStar style={{ paddingRight: "3px" }}/>
                                 {detailsData?.vote_average.toFixed(1)}
                             </Info>
-                            <Info> · </Info>
                             <Info> {detailsData?.release_date.slice(0, 4)} </Info>
-                            <Info> · </Info>
                             <Info>
                                 {detailsData?.genres.map((g) => (
                                     <>
-                                        <div key={g.id}> {g.name} </div>
-                                        <div> / </div>
+                                        <div
+                                            style={{position: "relative", top: "-4px", backgroundColor: "rgba(150, 150, 150, 0.2)", padding: "4px 4px", marginRight: "5px", borderRadius: "2px"}}
+                                            key={g.id}
+                                        >
+                                            {g.name}
+                                        </div>
                                     </>
                                 ))}
                             </Info>
@@ -286,19 +234,10 @@ function Details() {
                                 ))}
                             </CreditsContainer>
                         </Credits>
-                        <Similar>
+                        <SimilarWrapper>
                             <InfoTitle> 함께 시청된 영화 </InfoTitle>
-                            <SimilarContainer>
-                                {similarData?.results.slice(0, 20).map((movie) => (
-                                    <SimilarBox key={movie.id}>
-                                        {movie.backdrop_path ? <SimilarImg bgPhoto={makeImagePath(movie.backdrop_path)} /> : <SimilarNoImg> 이미지 없음 </SimilarNoImg>}
-                                        <SimilarTitle> {movie.title}</SimilarTitle>
-                                        {movie.release_date}
-                                        {movie.overview}
-                                    </SimilarBox>
-                                ))}
-                            </SimilarContainer>
-                        </Similar>
+                            <Similar />
+                        </SimilarWrapper>
                     </>
                 </>
             )}
