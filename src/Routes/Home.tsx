@@ -40,7 +40,7 @@ const Title = styled.h2`
     font-size: 50px;
 `;
 const Overview = styled.p`
-    width: 50%;
+    width: 40%;
     color: ${(prop) => prop.theme.white.lighter};
     font-size: 16px;
     font-weight: lighter;
@@ -82,7 +82,7 @@ function Home() {
         bigMovieMatch?.params.movieId && (
             popularData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                 nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
-                    topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
+                    topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) || parseInt(bigMovieMatch?.params.movieId)
     );
     setMovieDetail(clickedBox);
     useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
@@ -103,19 +103,19 @@ function Home() {
             <Sliders>
                 <Slider
                     title="지금 뜨는 영화"
-                    data={popularData?.results.reverse()}
+                    data={popularData?.results.slice(1)}
                     sliderId="popular"
                     
-                />
-                <Slider
-                    title="새로 올라온 영화"
-                    data={nowPlayingData?.results}
-                    sliderId="nowPlaying"
                 />
                 <Slider
                     title="평단의 찬사를 받은 영화"
                     data={topRatedData?.results}
                     sliderId="topRated"
+                />
+                <Slider
+                    title="새로 올라온 영화"
+                    data={nowPlayingData?.results}
+                    sliderId="nowPlaying"
                 />
             </Sliders>
             <AnimatePresence>

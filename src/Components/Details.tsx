@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
+import { useEffect } from "react";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -223,11 +224,6 @@ function Details() {
     const onCloseBtnClicked = () => {
         history.push(`/`);
     }
-    const onSimilarBoxClicked = (contentData: IMovie, movieId: number) => (
-        setMovieDetail(null),
-        detailsId = movieId, // API에 보낼 detailsId를 movieId와 일치시킨 후 푸쉬해보자...
-        history.push(`/movies/${detailsId}`) // 응 안됨 정상적으로 안넘어가고 NaN값으로 넘겨져서 에러남
-    );
     return (
         <Wrapper>
             {movieDetail && (
@@ -294,12 +290,11 @@ function Details() {
                             <InfoTitle> 함께 시청된 영화 </InfoTitle>
                             <SimilarContainer>
                                 {similarData?.results.slice(0, 20).map((movie) => (
-                                    <SimilarBox
-                                        key={movie.id}
-                                        onClick={() => onSimilarBoxClicked(movie, movie.id)}
-                                    >
+                                    <SimilarBox key={movie.id}>
                                         {movie.backdrop_path ? <SimilarImg bgPhoto={makeImagePath(movie.backdrop_path)} /> : <SimilarNoImg> 이미지 없음 </SimilarNoImg>}
                                         <SimilarTitle> {movie.title}</SimilarTitle>
+                                        {movie.release_date}
+                                        {movie.overview}
                                     </SimilarBox>
                                 ))}
                             </SimilarContainer>
