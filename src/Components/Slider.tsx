@@ -163,7 +163,7 @@ function Slider({ title, data, sliderId }: ISlider) {
     const onBoxClicked = (contentData: IMovie, movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
         setClickedSlider(sliderId);
         setMovieDetail(contentData);
-        history.push(`/movies/${movieId}`);;
+        history.push(`/movies/${movieId}`);
     };
     return (
         <Wrapper>

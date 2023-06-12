@@ -166,7 +166,6 @@ function Details() {
     var detailsId = parseInt(movieDetail && movieDetail.id);
     const { data: detailsData } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getCredits(detailsId));
-    const { data: similarData } = useQuery<IGetMoviesResult>(["similar", detailsId], () => getSimilar(detailsId));
     const onCloseBtnClicked = () => {
         history.push(`/`);
     }

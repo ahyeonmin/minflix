@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
-import { IGetMoviesResult, getNowPlaying, getPopular, getTopRated } from './api';
+import { IGetMoviesResult, IMovie, getNowPlaying, getPopular, getTopRated } from './api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
 import Slider from '../Components/Slider';
 import Details from '../Components/Details';
+import { BiInfoCircle } from "react-icons/bi"
 import { makeImagePath } from '../utils';
 import { clickedSliderState } from '../Routes/atoms';
 
@@ -32,19 +33,34 @@ const Banner = styled.div<{ bgPhoto: string }>`
         linear-gradient(rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0), rgba(0, 0, 0, 0), rgba(20, 20, 20, 1)),
         url(${(props) => props.bgPhoto});
     background-size: cover;
+    color: ${(prop) => prop.theme.white.lighter};
 `;
 const Title = styled.h2`
     margin-bottom: 20px;
-    color: ${(prop) => prop.theme.white.lighter};
     font-weight: 700;
     font-size: 50px;
 `;
 const Overview = styled.p`
     width: 40%;
-    color: ${(prop) => prop.theme.white.lighter};
+    margin-bottom: 20px;
     font-size: 16px;
     font-weight: lighter;
     line-height: 22px;
+`;
+const BannerInfo = styled(motion.div)`
+    display: flex;
+    align-items: center;
+    width: 100px;
+    background-color: #666666be;
+    font-size: 16px;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        background-color: #6666666d;
+        transition: 0.1s;
+    }
 `;
 const Sliders = styled.div``;
 const Overlay = styled(motion.div)`
@@ -90,6 +106,10 @@ function Home() {
 			? (document.body.style.overflowY = "hidden")
 			: (document.body.style.overflowY = "auto");
 	}, [bigMovieMatch]);
+    const onBannerInfoClicked = (bannerId: any) => {
+        setClickedSlider("banner");
+        history.push(`/movies/${bannerId}`);
+    }
     return (
         <Wrapper>
             {isNowPlayingLoading || isPopularLoading || isTopRatedLoading
@@ -98,6 +118,11 @@ function Home() {
                     <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
                         <Title>{nowPlayingData?.results[0].title}</Title>
                         <Overview>{nowPlayingData?.results[0].overview}</Overview>
+                        <BannerInfo
+                            onClick={() => onBannerInfoClicked(nowPlayingData?.results[0].id)}
+                        >
+                            <BiInfoCircle style={{ fontSize: "23px", paddingRight: "8px" }}/> 상세 정보
+                        </BannerInfo>
                     </Banner>
             )}
             <Sliders>
