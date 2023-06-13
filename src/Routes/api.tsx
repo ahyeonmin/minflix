@@ -61,6 +61,10 @@ export async function getTopRated() {
     return await (await fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}&language=ko-KR`)).json();
 }
 
+export async function getGenreMovies(genreId: number) {
+    return await (await fetch(`${BASE_PATH}/discover/movie?api_key=${API_KEY}&language=ko-KR&sort_by=popularity.desc&with_genres=${genreId}`)).json();
+}
+
 export async function getDetails(movieId: number) {
     return await (await fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`)).json();
 }

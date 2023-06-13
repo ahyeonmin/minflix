@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
-import { IGetMoviesResult, IMovie, getNowPlaying, getPopular, getTopRated } from './api';
+import { IGetMoviesResult, IMovie, getNowPlaying, getPopular, getTopRated, getGenreMovies } from './api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
@@ -14,7 +14,7 @@ import { clickedSliderState } from '../Routes/atoms';
 
 const Wrapper = styled.div`
     background-color: ${(props) => props.theme.black.veryDark};
-    height: 170vh;
+    height: 220vh;
     overflow: hidden; // 초과되는 내용은 가려서 스크롤바를 없앤다
 `;
 const Loader = styled.div`
@@ -28,7 +28,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
     flex-direction: column;
     justify-content: center;
     padding: 0 60px;
-    height: 100vh;
+    height: 95vh;
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0), rgba(0, 0, 0, 0), rgba(20, 20, 20, 1)),
         url(${(props) => props.bgPhoto});
@@ -67,7 +67,7 @@ const Overlay = styled(motion.div)`
     position: absolute;
     top: 0;
     width: 100vw;
-    height: 170vh;
+    height: 220vh;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
@@ -93,12 +93,16 @@ function Home() {
     const { data: popularData, isLoading: isPopularLoading } = useQuery<IGetMoviesResult>(["movies", "popular"], getPopular);
     const { data: nowPlayingData, isLoading: isNowPlayingLoading } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getNowPlaying);
     const { data: topRatedData, isLoading: isTopRatedLoading } = useQuery<IGetMoviesResult>(["movies", "topRated"], getTopRated);
+    const { data: animeData, isLoading: isAnimeLoading } = useQuery<IGetMoviesResult>(["movies", "anime"], () => getGenreMovies(16));
+    const { data: sfData, isLoading: isSfLoading } = useQuery<IGetMoviesResult>(["movies", "sf"], () => getGenreMovies(878));
     const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     const clickedBox = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환) 박스를 클릭했을 때 movieId 반환
         bigMovieMatch?.params.movieId && (
             popularData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                 nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
-                    topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) || parseInt(bigMovieMatch?.params.movieId)
+                    topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
+                        animeData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
+                            sfData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
     );
     setMovieDetail(clickedBox);
     useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
@@ -112,7 +116,7 @@ function Home() {
     }
     return (
         <Wrapper>
-            {isNowPlayingLoading || isPopularLoading || isTopRatedLoading
+            {isNowPlayingLoading || isPopularLoading || isTopRatedLoading || isAnimeLoading || isSfLoading
                 ? <Loader>로딩 중...</Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
                     <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
@@ -142,12 +146,22 @@ function Home() {
                     data={nowPlayingData?.results}
                     sliderId="nowPlaying"
                 />
+                <Slider
+                    title="애니메이션"
+                    data={animeData?.results}
+                    sliderId="anime"
+                />
+                <Slider
+                    title="SF"
+                    data={sfData?.results}
+                    sliderId="sf"
+                />
             </Sliders>
             <AnimatePresence>
                 {bigMovieMatch ? (
                     <>
                         <Overlay
-                            onClick={onOverlayClicked}
+                            onClick={() => onOverlayClicked}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         />

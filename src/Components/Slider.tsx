@@ -20,11 +20,17 @@ const Wrapper = styled.div`
     top: -150px;
     margin: 0 60px;
     margin-bottom: 190px;
+    &:hover {
+        .buttons {
+            opacity: 1;
+        }
+    }
 `;
 const Buttons = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    opacity: 0;
 `;
 const Button = styled(motion.button)`
     position: absolute;
@@ -61,6 +67,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
+    color: white;
     cursor: pointer;
     &:first-child { // 가려지는 박스는 시작하는 위치를 바꿔준다
         transform-origin: center left;
@@ -175,11 +182,11 @@ function Slider({ title, data, sliderId }: ISlider) {
                     initial={false}
                     onExitComplete={toggleLeaving}
                 >
-                    <Buttons>
-                        <Button onClick={decreaseIndex} whileHover={{ scale: 1.4 }}>
+                    <Buttons className="buttons">
+                        <Button onClick={decreaseIndex} whileHover={{ scale: 1.3 }}>
                             <FaChevronLeft/>
                         </Button>
-                        <Button onClick={increaseIndex} whileHover={{ scale: 1.4 }}>
+                        <Button onClick={increaseIndex} whileHover={{ scale: 1.3 }}>
                             <FaChevronRight/>
                         </Button>
                     </Buttons>
@@ -204,7 +211,7 @@ function Slider({ title, data, sliderId }: ISlider) {
                                     initial="normal"
                                     whileHover="hover"
                                     transition={{ type: "tween", duration: 0.3 }}
-                                    bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                                    bgPhoto={movie.backdrop_path ? makeImagePath(movie.backdrop_path, "w500") : makeImagePath(movie.poster_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}
                                         <div>{movie.title}</div>
