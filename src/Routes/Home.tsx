@@ -14,7 +14,7 @@ import { clickedSliderState } from '../Routes/atoms';
 
 const Wrapper = styled.div`
     background-color: ${(props) => props.theme.black.veryDark};
-    height: 220vh;
+    height: 250vh;
     overflow: hidden; // 초과되는 내용은 가려서 스크롤바를 없앤다
 `;
 const Loader = styled.div`
@@ -67,7 +67,7 @@ const Overlay = styled(motion.div)`
     position: absolute;
     top: 0;
     width: 100vw;
-    height: 220vh;
+    height: 250vh;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
@@ -95,6 +95,7 @@ function Home() {
     const { data: topRatedData, isLoading: isTopRatedLoading } = useQuery<IGetMoviesResult>(["movies", "topRated"], getTopRated);
     const { data: animeData, isLoading: isAnimeLoading } = useQuery<IGetMoviesResult>(["movies", "anime"], () => getGenreMovies(16));
     const { data: sfData, isLoading: isSfLoading } = useQuery<IGetMoviesResult>(["movies", "sf"], () => getGenreMovies(878));
+    const { data: fantasyData, isLoading: isFantasyLoading } = useQuery<IGetMoviesResult>(["movies", "fantasy"], () => getGenreMovies(14));
     const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     const clickedBox = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환) 박스를 클릭했을 때 movieId 반환
         bigMovieMatch?.params.movieId && (
@@ -102,7 +103,8 @@ function Home() {
                 nowPlayingData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                     topRatedData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
                         animeData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
-                            sfData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
+                            sfData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId) ||
+                                fantasyData?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId)
     );
     setMovieDetail(clickedBox);
     useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
@@ -116,7 +118,7 @@ function Home() {
     }
     return (
         <Wrapper>
-            {isNowPlayingLoading || isPopularLoading || isTopRatedLoading || isAnimeLoading || isSfLoading
+            {isNowPlayingLoading || isPopularLoading || isTopRatedLoading || isAnimeLoading || isSfLoading || isFantasyLoading
                 ? <Loader>로딩 중...</Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
                     <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
@@ -152,9 +154,14 @@ function Home() {
                     sliderId="anime"
                 />
                 <Slider
-                    title="SF"
+                    title="SF 영화"
                     data={sfData?.results}
                     sliderId="sf"
+                />
+                <Slider
+                    title="판타지 영화"
+                    data={fantasyData?.results}
+                    sliderId="fantasy"
                 />
             </Sliders>
             <AnimatePresence>
