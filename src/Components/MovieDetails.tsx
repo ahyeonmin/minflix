@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { movieDetailState } from "../Routes/atoms";
+import { movieDetailState, tvDetailState } from "../Routes/atoms";
 import { useQuery } from "react-query";
 import { motion } from "framer-motion";
-import { IGetMoviesResult, ICredits, IMovie, getCredits, getSimilar, getDetails } from '../Routes/api';
+import { ICredits, IMovie, ITv, getCredits, getDetails, getTvDetails } from '../Routes/api';
 import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
@@ -67,7 +67,7 @@ const Tagline = styled.h4`
 `;
 const InfoContainer = styled.div`
     position: relative;
-    top: -115px;
+    top: -117px;
     padding: 20px;
     display: flex;
 `;
@@ -160,7 +160,7 @@ const SimilarWrapper = styled.div`
     padding: 20px;
 `;
 
-function Details() {
+function MovieDetails() {
     const history = useHistory();
     const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     var detailsId = parseInt(movieDetail && movieDetail.id);
@@ -244,4 +244,4 @@ function Details() {
     );
 }
 
-export default Details;
+export default MovieDetails;

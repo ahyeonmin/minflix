@@ -6,8 +6,8 @@ import { motion } from 'framer-motion';
 import { makeImagePath } from '../utils';
 import { FaChevronLeft, FaChevronRight} from "react-icons/fa";
 import { useRecoilState } from "recoil";
-import { clickedSliderState, movieDetailState } from "../Routes/atoms";
-import { IMovie } from "../Routes/api";
+import { clickedSliderState, movieDetailState, tvDetailState } from "../Routes/atoms";
+import { IMovie, ITv, isMovie } from "../Routes/api";
 
 interface ISlider {
     title: string;
@@ -137,6 +137,7 @@ const InfoVariants = {
 function Slider({ title, data, sliderId }: ISlider) {
     const [ clickedSlider, setClickedSlider ] = useRecoilState(clickedSliderState);
     const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
+    const [ tvDetail, setTvDetail ] = useRecoilState(tvDetailState);
     const [ goingback, setGoingback ] = useState(false); // 왼쪽 버튼 클릭시, 왼쪽으로 넘어가는 모션
     const [ index, setIndex ] = useState(0);
     const [ leaving, setLeaving ] = useState(false); // 슬라이드 연속 클릭시, 간격 늘어나는 문제 해결하기
@@ -167,10 +168,15 @@ function Slider({ title, data, sliderId }: ISlider) {
             setIndex((prev) => prev ===  0 ? maxIndex : prev - 1) // 첫번째 페이지에서 뒤로 넘어갈 경우 마지막 영화를 보여준다.
         }
     }
-    const onBoxClicked = (contentData: IMovie, movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
+    const onBoxClicked = (contentData: IMovie | ITv, movieId: number) => { // 박스를 클릭할 때 해당 sliderId를 recoil에 담고, bigMovie에 넘긴다. layoutId를 연결하기 위해..
         setClickedSlider(sliderId);
-        setMovieDetail(contentData);
-        history.push(`/movies/${movieId}`);
+        if (isMovie(contentData)) {
+			setMovieDetail(contentData);
+			history.push(`/movies/${movieId}`);
+		} else {
+			setTvDetail(contentData);
+			history.push(`/tv/${movieId}`);
+		}
     };
     return (
         <Wrapper>
@@ -202,19 +208,19 @@ function Slider({ title, data, sliderId }: ISlider) {
                         {data
                             .slice(1)
                             .slice(offset*index, offset*index+offset)
-                            .map((movie: any) => (
+                            .map((content: any) => (
                                 <Box
-                                    key={movie.id}
-                                    layoutId={sliderId + "_" + (movie.id + "")} // 다른 데이터와 겹치는 영화를 구분하기 위해 sliderId 추가, id는 문자열로 변환
-                                    onClick={() => onBoxClicked(movie, movie.id)}
+                                    key={content.id}
+                                    layoutId={sliderId + "_" + (content.id + "")} // 다른 데이터와 겹치는 영화를 구분하기 위해 sliderId 추가, id는 문자열로 변환
+                                    onClick={() => onBoxClicked(content, content.id)}
                                     variants={boxVariants}
                                     initial="normal"
                                     whileHover="hover"
                                     transition={{ type: "tween", duration: 0.3 }}
-                                    bgPhoto={movie.backdrop_path ? makeImagePath(movie.backdrop_path, "w500") : makeImagePath(movie.poster_path, "w500")}
+                                    bgPhoto={content.backdrop_path ? makeImagePath(content.backdrop_path, "w500") : makeImagePath(content.poster_path, "w500")}
                                 >
                                     <Info variants={InfoVariants}> {/* 부모 컴포넌트의 hover를 상속받음 */}
-                                        <div>{movie.title}</div>
+                                        <div>{content.title || content.name}</div>
                                     </Info>
                                 </Box>
                         ))}

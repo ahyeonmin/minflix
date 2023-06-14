@@ -6,7 +6,13 @@ export const movieDetailState = atom<any>({
     default: "",
 });
 
+export const tvDetailState = atom<any>({
+    key: "tvDetail",
+    default: "",
+});
+
 export const clickedSliderState = atom({
     key: "clickedSlider",
     default: "",
 });
+

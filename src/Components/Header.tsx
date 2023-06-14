@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion, useAnimation, useViewportScroll } from 'framer-motion';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { HiChevronDown } from 'react-icons/hi'
 
 interface IForm {
     keyword: string;
@@ -81,6 +82,17 @@ const Input = styled(motion.input)`
     color: ${(props) => props.theme.white.lighter};
     font-size: 14px;
     outline: none;
+`;
+const Profile = styled.div`
+    width: 30px;
+    height: 30px;
+    margin-left: 15px;
+    margin-right: 5px;
+    background-image: url('http://occ-0-1361-988.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ1Xu1M5W1QlQ3G13lGsLHck5DEEF4dpLIaSeSGc2SSEIkGU52ElM0dajnWD-5Uvu4V4HckTGUVH1hRzlIWZshU1ph6wnQJAFnWH.png?r=ec1');
+    background-size: cover;
+    background-position: center center;
+    border-radius: 5px;
+    cursor: pointer;
 `;
 
 const logoVariants = {
@@ -180,6 +192,8 @@ function Header() {
                         transition={{ type: "linear" }}
                         placeholder='영화/시리즈를 검색해보세요.'
                     />
+                    <Profile />
+                    <HiChevronDown />
                 </Search>
             </Col>
         </Nav>

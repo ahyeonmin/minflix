@@ -7,7 +7,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
 import Slider from '../Components/Slider';
-import Details from '../Components/Details';
+import MovieDetails from '../Components/MovieDetails';
 import { BiInfoCircle } from "react-icons/bi"
 import { makeImagePath } from '../utils';
 import { clickedSliderState } from '../Routes/atoms';
@@ -39,6 +39,7 @@ const Title = styled.h2`
     margin-bottom: 20px;
     font-weight: 700;
     font-size: 50px;
+    text-shadow: 1px 1px 1px #2F2F2F;
 `;
 const Overview = styled.p`
     width: 40%;
@@ -46,6 +47,7 @@ const Overview = styled.p`
     font-size: 16px;
     font-weight: lighter;
     line-height: 22px;
+    text-shadow: 1px 1px 1px #2F2F2F;
 `;
 const BannerInfo = styled(motion.div)`
     display: flex;
@@ -121,11 +123,11 @@ function Home() {
             {isNowPlayingLoading || isPopularLoading || isTopRatedLoading || isAnimeLoading || isSfLoading || isFantasyLoading
                 ? <Loader>로딩 중...</Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
-                    <Banner bgPhoto={makeImagePath(nowPlayingData?.results[0].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
-                        <Title>{nowPlayingData?.results[0].title}</Title>
-                        <Overview>{nowPlayingData?.results[0].overview}</Overview>
+                    <Banner bgPhoto={makeImagePath(nowPlayingData?.results[1].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                        <Title>{nowPlayingData?.results[1].title}</Title>
+                        <Overview>{nowPlayingData?.results[1].overview}</Overview>
                         <BannerInfo
-                            onClick={() => onBannerInfoClicked(nowPlayingData?.results[0].id)}
+                            onClick={() => onBannerInfoClicked(nowPlayingData?.results[1].id)}
                         >
                             <BiInfoCircle style={{ fontSize: "23px", paddingRight: "8px" }}/> 상세 정보
                         </BannerInfo>
@@ -134,9 +136,8 @@ function Home() {
             <Sliders>
                 <Slider
                     title="지금 뜨는 영화"
-                    data={popularData?.results.slice(1)}
+                    data={popularData?.results}
                     sliderId="popular"
-                    
                 />
                 <Slider
                     title="평단의 찬사를 받은 영화"
@@ -176,7 +177,7 @@ function Home() {
                             style={{ top: scrollY.get() + 50 }} // 스크롤을 해도 따라오도록 하기 (값을 넣으면 위치가 고정됨), get()으로 실제값을 받아옴
                             layoutId={clickedSlider + "_" + bigMovieMatch.params.movieId} // Slider와 layoutId 연결
                         >
-                            <Details />
+                            <MovieDetails />
                         </BigMovie>
                     </>
                 ) : null}

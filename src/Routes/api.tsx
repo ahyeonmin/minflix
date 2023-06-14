@@ -49,8 +49,32 @@ export interface IGetMoviesResult {
     total_results: number;
 }
 
+export interface ITv {
+    backdrop_path: string;
+    first_air_date: string;
+    id: number;
+    name: string;
+    original_name: string;
+    overview: string;
+    poster_path: string;
+    vote_average: number;
+    profile_path: string;
+    genres: {
+		id: number;
+		name: string;
+	}[];
+}
+
+export interface IGetTvResult {
+    results: ITv[];
+}
+
+export function isMovie(data: IMovie | ITv): data is IMovie {
+	return (data as IMovie).title !== undefined;
+}
+
 export async function getNowPlaying() {
-    return await (await fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR`)).json();
+    return await (await fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=2`)).json();
 }
 
 export async function getPopular() {
@@ -76,6 +100,14 @@ export async function getCredits(movieId: number) {
 export async function getSimilar(movieId: number) {
     return await (await fetch(`${BASE_PATH}/movie/${movieId}/similar?api_key=${API_KEY}&language=ko-KR`)).json();
 } 
+
+export async function getOnTheAir() {
+    return await (await fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&language=ko-KR&page=3`)).json();
+}
+
+export async function getTvDetails(tvId: number) {
+    return await (await fetch(`${BASE_PATH}/tv/${tvId}?api_key=${API_KEY}&language=ko-KR`)).json();
+}
 
 export async function getSearch(keyword: string) {
     return await (await fetch(`${BASE_PATH}search/multi?api_key=${API_KEY}&language=ko-KR&query=${keyword}&page=1&include_adult=false`)).json();
