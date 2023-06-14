@@ -1,9 +1,9 @@
 import  styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { motion, useAnimation, useViewportScroll } from 'framer-motion';
+import { motion, spring, useAnimation, useViewportScroll } from 'framer-motion';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { HiChevronDown } from 'react-icons/hi'
+import { AiFillCaretDown } from 'react-icons/ai'
 
 interface IForm {
     keyword: string;
@@ -31,9 +31,7 @@ const Logo = styled(motion.svg)`
     padding-left: 60px;
     margin-right: 40px;
     fill: ${(prop) => prop.theme.red};
-    :hover {
-        cursor: pointer;
-    }
+    cursor: pointer;
 `;
 const Items = styled.ul`
     display: flex;
@@ -47,7 +45,6 @@ const Item = styled.li`
     :hover {
         color: ${(prop) => prop.theme.white.darker};
         transition: ease-in-out 0.2s;
-        cursor: pointer;
     }
 `;
 const Circle = styled(motion.span)`
@@ -63,12 +60,10 @@ const Search = styled.form `
     position: relative;
     display: flex;
     align-items: center;
-    padding-right: 60px;
+    margin-right: 5px;
     color: ${(props) => props.theme.white.lighter};
     svg { height: 25px; };
-    :hover {
-        cursor: pointer;
-    }
+    cursor: pointer;
 `;
 const Input = styled(motion.input)`
     width: 160px;
@@ -84,15 +79,22 @@ const Input = styled(motion.input)`
     outline: none;
 `;
 const Profile = styled.div`
+    display: flex;
+    align-items: center;
+    padding-right: 60px;
+    cursor: pointer;
+`;
+const ProfileImg = styled.div`
     width: 30px;
     height: 30px;
     margin-left: 15px;
-    margin-right: 5px;
+    margin-right: 8px;
     background-image: url('http://occ-0-1361-988.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ1Xu1M5W1QlQ3G13lGsLHck5DEEF4dpLIaSeSGc2SSEIkGU52ElM0dajnWD-5Uvu4V4HckTGUVH1hRzlIWZshU1ph6wnQJAFnWH.png?r=ec1');
     background-size: cover;
     background-position: center center;
     border-radius: 5px;
-    cursor: pointer;
+`;
+const ProfileCaret = styled(motion.div)`
 `;
 
 const logoVariants = {
@@ -192,9 +194,13 @@ function Header() {
                         transition={{ type: "linear" }}
                         placeholder='영화/시리즈를 검색해보세요.'
                     />
-                    <Profile />
-                    <HiChevronDown />
                 </Search>
+                <Profile>
+                    <ProfileImg />
+                    <ProfileCaret whileHover={{ rotateZ: 180 }} transition={{ type: "linear" }}>
+                        <AiFillCaretDown/>
+                    </ProfileCaret>
+                </Profile>
             </Col>
         </Nav>
     );
