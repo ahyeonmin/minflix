@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
-import TvSimilar from "./TvSimilar";
+import Similar from "./Similar";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -235,7 +235,7 @@ function MovieDetails() {
                         </Credits>
                         <SimilarWrapper>
                             <InfoTitle> 함께 시청된 영화 </InfoTitle>
-                            <TvSimilar />
+                            <Similar />
                         </SimilarWrapper>
                     </>
                 </>
