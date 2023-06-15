@@ -105,6 +105,18 @@ export async function getOnTheAir() {
     return await (await fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&language=ko-KR&page=4`)).json();
 }
 
+export async function getTvPopular() {
+    return await (await fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}&language=ko-KR&page=6`)).json();
+}
+
+export async function getTvTopRated() {
+    return await (await fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}&language=ko-KR`)).json();
+}
+
+export async function getGenreTv(genreId: number) {
+    return await (await fetch(`${BASE_PATH}/discover/tv?api_key=${API_KEY}&language=ko-KR&sort_by=popularity.desc&with_genres=${genreId}&page=2`)).json();
+}
+
 export async function getTvDetails(tvId: number) {
     return await (await fetch(`${BASE_PATH}/tv/${tvId}?api_key=${API_KEY}&language=ko-KR`)).json();
 }

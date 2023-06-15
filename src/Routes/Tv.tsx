@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
-import { IGetTvResult, getOnTheAir } from './api';
+import { IGetTvResult, getGenreTv, getOnTheAir, getTvPopular, getTvTopRated } from './api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { tvDetailState } from '../Routes/atoms';
@@ -91,11 +91,21 @@ function Tv() {
     const { scrollY } = useScroll();
     const history = useHistory();
     const onOverlayClicked = () => history.push("/tv");
+    const { data: tvAnimeData, isLoading: isTvAnimeLoading } = useQuery<IGetTvResult>(["tv", "tvAnime"], () => getGenreTv(16));
+    const { data: tvPopularData, isLoading: isTvPopularLoading } = useQuery<IGetTvResult>(["tv", "tvPopular"], getTvPopular);
+    const { data: tvTopRatedData, isLoading: isTvTopRatedLoading } = useQuery<IGetTvResult>(["tv", "tvTopRated"], getTvTopRated);
     const { data: onTheAirData, isLoading: isOnTheAirLoading } = useQuery<IGetTvResult>(["tv", "onTheAir"], getOnTheAir);
+    const { data: tvActionData, isLoading: isTvActionLoading } = useQuery<IGetTvResult>(["tv", "tvAction"], () => getGenreTv(10759));
+    const { data: tvSfFantasyData, isLoading: isTvSfFantasyLoading } = useQuery<IGetTvResult>(["tv", "tvSfFantasy"], () => getGenreTv(10765));
     const [ tvDetail, setTvDetail ] = useRecoilState(tvDetailState);
     const clickedBox = // bigMovieMatch가 존재한다면 같은 movie id를 반환 (number로 형 변환) 박스를 클릭했을 때 tvId 반환
         bigMovieMatch?.params.tvId && (
-                onTheAirData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId)
+            tvAnimeData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId) ||
+                tvPopularData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId) ||
+                    tvTopRatedData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId) ||
+                            onTheAirData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId) ||
+                                tvActionData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId) ||
+                                    tvSfFantasyData?.results.find((tv) => tv.id === +bigMovieMatch.params.tvId)
     );
     setTvDetail(clickedBox);
     useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
@@ -109,14 +119,14 @@ function Tv() {
     }
     return (
         <Wrapper>
-            {isOnTheAirLoading
+            {isTvAnimeLoading || isTvPopularLoading || isTvTopRatedLoading || isOnTheAirLoading || isTvActionLoading || isTvSfFantasyLoading
                 ? <Loader> 로딩 중... </Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
-                    <Banner bgPhoto={makeImagePath(onTheAirData?.results[13].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
-                        <Title>{onTheAirData?.results[13].name}</Title>
-                        <Overview>{onTheAirData?.results[13].overview}</Overview>
+                    <Banner bgPhoto={makeImagePath(onTheAirData?.results[12].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                        <Title>{onTheAirData?.results[12].name}</Title>
+                        <Overview>{onTheAirData?.results[12].overview}</Overview>
                         <BannerInfo
-                            onClick={() => onBannerInfoClicked(onTheAirData?.results[13].id)}
+                            onClick={() => onBannerInfoClicked(onTheAirData?.results[12].id)}
                         >
                             <BiInfoCircle style={{ fontSize: "23px", paddingRight: "8px" }}/> 상세 정보
                         </BannerInfo>
@@ -124,9 +134,34 @@ function Tv() {
             )}
             <Sliders>
                 <Slider
+                    title="아니메 시리즈"
+                    data={tvAnimeData?.results}
+                    sliderId="tvAime"
+                />
+                <Slider
+                    title="지금 뜨는 콘텐츠"
+                    data={tvPopularData?.results}
+                    sliderId="tvPopular"
+                />
+                <Slider
+                    title="어워드 수상 시리즈"
+                    data={tvTopRatedData?.results}
+                    sliderId="tvTopRated"
+                />
+                <Slider
                     title="새로 올라온 콘텐츠"
                     data={onTheAirData?.results}
                     sliderId="onTheAir"
+                />
+                <Slider
+                    title="액션 & 어드벤처 시리즈"
+                    data={tvActionData?.results}
+                    sliderId="tvAction"
+                />
+                <Slider
+                    title="상상력 넘치는 SF & 판타지 시리즈"
+                    data={tvSfFantasyData?.results}
+                    sliderId="tvFantasy"
                 />
             </Sliders>
             <AnimatePresence>
