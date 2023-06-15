@@ -88,13 +88,14 @@ const ProfileImg = styled.div`
     width: 30px;
     height: 30px;
     margin-left: 15px;
-    margin-right: 8px;
+    margin-right: 10px;
     background-image: url('http://occ-0-1361-988.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ1Xu1M5W1QlQ3G13lGsLHck5DEEF4dpLIaSeSGc2SSEIkGU52ElM0dajnWD-5Uvu4V4HckTGUVH1hRzlIWZshU1ph6wnQJAFnWH.png?r=ec1');
     background-size: cover;
     background-position: center center;
     border-radius: 5px;
 `;
 const ProfileCaret = styled(motion.div)`
+    font-size: 12px;
 `;
 
 const logoVariants = {

@@ -3,12 +3,12 @@ import { useRecoilState } from "recoil";
 import { movieDetailState, tvDetailState } from "../Routes/atoms";
 import { useQuery } from "react-query";
 import { motion } from "framer-motion";
-import { ICredits, IMovie, ITv, getCredits, getDetails, getTvDetails } from '../Routes/api';
+import { ICredits, IMovie, getCredits, getDetails } from '../Routes/api';
 import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
-import Similar from "./Similar";
+import TvSimilar from "./TvSimilar";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -235,7 +235,7 @@ function MovieDetails() {
                         </Credits>
                         <SimilarWrapper>
                             <InfoTitle> 함께 시청된 영화 </InfoTitle>
-                            <Similar />
+                            <TvSimilar />
                         </SimilarWrapper>
                     </>
                 </>

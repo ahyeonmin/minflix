@@ -3,11 +3,12 @@ import { useRecoilState } from "recoil";
 import { tvDetailState } from "../Routes/atoms";
 import { useQuery } from "react-query";
 import { motion } from "framer-motion";
-import { ITv, getTvDetails } from '../Routes/api';
+import { ICredits, ITv, getTvCredits, getTvDetails } from '../Routes/api';
 import { useHistory } from "react-router-dom";
 import { makeImagePath } from '../utils';
 import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
+import TvSimilar from "./TvSimilar";
 
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
@@ -79,12 +80,85 @@ const Overview = styled.p`
     font-weight: lighter;
     line-height: 18px;
 `;
+const Credits = styled.div`
+    position: relative;
+    top: -145px;
+    padding: 20px;
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 14px;
+`;
+const InfoTitle = styled.div`
+    padding-bottom: 15px;
+    font-size: 18px;
+`;
+const CreditsContainer = styled.div`
+    height: 160px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+    width: 1rem;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #666666;
+		border-radius: 1rem;
+		background-clip: padding-box;
+		border: 0.25rem solid transparent;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: #141414;
+    }
+`;
+const CreditsBox = styled.div`
+    width: 230px;
+    display: flex;
+    padding-bottom: 20px;
+`;
+const CreditsImg = styled.div<{profileImg: string}>`
+    width: 60px;
+    height: 60px;
+    background-image: url(${(props) => props.profileImg});
+    background-size: cover;
+    background-position: center center;
+    border-radius: 5px;
+    margin-right: 7px;
+`;
+const NoImg = styled.div`
+    background-color: #0e0e0e;
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 7px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const CreditsNameBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+`;
+const CreditsName = styled.div`
+    padding-bottom: 5px;
+`;
+const CreditsCharacter = styled.div`
+    font-size: 12px;
+    font-weight: lighter;
+`;
+const SimilarWrapper = styled.div`
+    height: 43%;
+    position: relative;
+    top: -160px;
+    padding: 20px;
+`;
 
 function TvDetails() {
     const history = useHistory();
     const [ tvDetail, setTvDetail ] = useRecoilState(tvDetailState);
     var detailsId = parseInt(tvDetail && tvDetail.id);
     const { data: detailsData } = useQuery<ITv>(["details", detailsId], () => getTvDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
+    const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getTvCredits(detailsId));
     const onCloseBtnClicked = () => {
         history.push(`/tv`);
     }
@@ -124,6 +198,36 @@ function TvDetails() {
                             </Info>
                         </InfoContainer>
                         <Overview> {detailsData?.overview} </Overview>
+                        <Credits>
+                            <InfoTitle> 제작 </InfoTitle>
+                            <CreditsContainer>
+                                {creditsData?.crew.slice(0, 10).map((tv) => (
+                                    <CreditsBox>
+                                        {tv.profile_path ? <CreditsImg profileImg={makeImagePath(tv.profile_path)} /> : <NoImg> 이미지 없음 </NoImg>}
+                                        <CreditsNameBox>
+                                            <CreditsName> {tv.name} </CreditsName>
+                                            <CreditsCharacter> {tv.known_for_department} </CreditsCharacter>
+                                        </CreditsNameBox>
+                                    </CreditsBox>
+                                ))}
+                            </CreditsContainer>
+                            <InfoTitle style={{ paddingTop: "20px"}}> 출연 </InfoTitle>
+                            <CreditsContainer>
+                                {creditsData?.cast.slice(0, 20).map((tv) => (
+                                    <CreditsBox>
+                                        {tv.profile_path ? <CreditsImg profileImg={makeImagePath(tv.profile_path)} /> : <NoImg> 이미지 없음 </NoImg>}
+                                        <CreditsNameBox>
+                                            <CreditsName> {tv.name} </CreditsName>
+                                            <CreditsCharacter> {tv.character} </CreditsCharacter>
+                                        </CreditsNameBox>
+                                    </CreditsBox>
+                                ))}
+                            </CreditsContainer>
+                        </Credits>
+                        <SimilarWrapper>
+                            <InfoTitle> 함께 시청된 콘텐츠 </InfoTitle>
+                            <TvSimilar />
+                        </SimilarWrapper>
                     </>
                 </>
             )}

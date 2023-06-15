@@ -102,12 +102,20 @@ export async function getSimilar(movieId: number) {
 } 
 
 export async function getOnTheAir() {
-    return await (await fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&language=ko-KR&page=3`)).json();
+    return await (await fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&language=ko-KR&page=4`)).json();
 }
 
 export async function getTvDetails(tvId: number) {
     return await (await fetch(`${BASE_PATH}/tv/${tvId}?api_key=${API_KEY}&language=ko-KR`)).json();
 }
+
+export async function getTvCredits(tvId: number) {
+    return await (await fetch(`${BASE_PATH}/tv/${tvId}/credits?api_key=${API_KEY}&language=ko-KR`)).json();
+}
+
+export async function getTvSimilar(tvId: number) {
+    return await (await fetch(`${BASE_PATH}/tv/${tvId}/similar?api_key=${API_KEY}&language=ko-KR`)).json();
+} 
 
 export async function getSearch(keyword: string) {
     return await (await fetch(`${BASE_PATH}search/multi?api_key=${API_KEY}&language=ko-KR&query=${keyword}&page=1&include_adult=false`)).json();
