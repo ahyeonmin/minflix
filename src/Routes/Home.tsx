@@ -6,7 +6,7 @@ import { IGetMoviesResult, IMovie, getNowPlaying, getPopular, getTopRated, getGe
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { movieDetailState } from '../Routes/atoms';
-import Slider from '../Components/Slider';
+import Slider from '../Components/Slider';
 import MovieDetails from '../Components/MovieDetails';
 import { BiInfoCircle } from "react-icons/bi"
 import { makeImagePath } from '../utils';

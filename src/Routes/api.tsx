@@ -24,6 +24,7 @@ export interface IMovie {
     id: number;
     overview: string;
     poster_path: string;
+    name: string;
     title: string;
     original_title: string;
     original_name: string;

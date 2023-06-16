@@ -6,7 +6,7 @@ import { IGetTvResult, getGenreTv, getOnTheAir, getTvPopular, getTvTopRated } fr
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { tvDetailState } from '../Routes/atoms';
-import Slider from '../Components/Slider';
+import Slider from '../Components/Slider';
 import TvDetails from '../Components/TvDetails';
 import { BiInfoCircle } from "react-icons/bi"
 import { makeImagePath } from '../utils';

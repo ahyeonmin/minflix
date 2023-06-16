@@ -10,6 +10,10 @@ import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
 import TvSimilar from "./TvSimilar";
 
+interface IDetails {
+    from?: string;
+}
+
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
     height: 100%;
@@ -153,15 +157,12 @@ const SimilarWrapper = styled.div`
     padding: 20px;
 `;
 
-function TvDetails() {
+function TvDetails({ from = "tv" }: IDetails) {
     const history = useHistory();
     const [ tvDetail, setTvDetail ] = useRecoilState(tvDetailState);
     var detailsId = parseInt(tvDetail && tvDetail.id);
     const { data: detailsData } = useQuery<ITv>(["details", detailsId], () => getTvDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getTvCredits(detailsId));
-    const onCloseBtnClicked = () => {
-        history.push(`/tv`);
-    }
     return (
         <Wrapper>
             {tvDetail && (
@@ -173,7 +174,7 @@ function TvDetails() {
                                 url(${makeImagePath(tvDetail.backdrop_path)})`,
                         }}
                     >
-                        <CloseBtn onClick={onCloseBtnClicked}>
+                        <CloseBtn onClick={() => history.push(`/${from}`)}>
                             <VscClose />
                         </CloseBtn>
                     </Cover>

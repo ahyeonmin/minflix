@@ -70,12 +70,12 @@ const Input = styled(motion.input)`
     transform-origin: right; // 변화가 시작하는 위치
     position: absolute;
     left: -150px;
-    background: ${(props) => props.theme.black.lighter};
+    background: ${(props) => props.theme.black.darker};
     border: ${(props) => props.theme.white.lighter} 1px solid;
     padding: 8px;
     padding-right: 20px;
     color: ${(props) => props.theme.white.lighter};
-    font-size: 14px;
+    font-size: 13px;
     outline: none;
 `;
 const Profile = styled.div`
@@ -140,8 +140,10 @@ function Header() {
             keyword: "",
         },
     });
+    const onLogoClicked = () => {
+        history.push(`/`);
+    };
     const onValid = (data: IForm) => { // data를 인자로 받아온다
-        console.log(data);
         history.push(`/search?keyword=${data.keyword}`); // 검색 버튼 클릭시 search 페이지로 이동
         window.location.reload(); // 새로고침을 해야만 reload 되는 문제를 해결. 그러나 깜빡임 문제가 있음. 이 문제는 react-router-dom V6 업그레이드 후 navigate로 다시 시도해봐야겠다.
     };
@@ -149,6 +151,7 @@ function Header() {
         <Nav variants={navVariants} initial="top" animate={navAnimation} transition={{type: "spring"}}>
             <Col>
                 <Logo
+                    onClick={onLogoClicked}
                     variants={logoVariants}
                     initial="normal"
                     whileHover="active"

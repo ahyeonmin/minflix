@@ -10,6 +10,10 @@ import { FaStar } from "react-icons/fa";
 import { VscClose } from "react-icons/vsc";
 import Similar from "./Similar";
 
+interface IDetails {
+    from?: string;
+}
+
 const Wrapper = styled(motion.div)`
     color: ${(props) => props.theme.white.darker};
     height: 100%;
@@ -160,14 +164,14 @@ const SimilarWrapper = styled.div`
     padding: 20px;
 `;
 
-function MovieDetails() {
+function MovieDetails({ from = "" }: IDetails) {
     const history = useHistory();
     const [ movieDetail, setMovieDetail ] = useRecoilState(movieDetailState);
     var detailsId = parseInt(movieDetail && movieDetail.id);
     const { data: detailsData } = useQuery<IMovie>(["details", detailsId], () => getDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getCredits(detailsId));
     const onCloseBtnClicked = () => {
-        history.push(`/`);
+        history.push(`/${from}`);
     }
     return (
         <Wrapper>
