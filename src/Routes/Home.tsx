@@ -169,7 +169,7 @@ function Home() {
                 {bigMovieMatch ? (
                     <>
                         <Overlay
-                            onClick={() => onOverlayClicked}
+                            onClick={onOverlayClicked}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         />

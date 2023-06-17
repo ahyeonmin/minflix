@@ -90,7 +90,6 @@ function Tv() {
     const bigMovieMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
     const { scrollY } = useScroll();
     const history = useHistory();
-    const onOverlayClicked = () => history.push("/tv");
     const { data: tvAnimeData, isLoading: isTvAnimeLoading } = useQuery<IGetTvResult>(["tv", "tvAnime"], () => getGenreTv(16));
     const { data: tvPopularData, isLoading: isTvPopularLoading } = useQuery<IGetTvResult>(["tv", "tvPopular"], getTvPopular);
     const { data: tvTopRatedData, isLoading: isTvTopRatedLoading } = useQuery<IGetTvResult>(["tv", "tvTopRated"], getTvTopRated);
@@ -113,6 +112,7 @@ function Tv() {
             ? (document.body.style.overflowY = "hidden")
             : (document.body.style.overflowY = "auto");
     }, [bigMovieMatch]);
+    const onOverlayClicked = () => history.push("/tv");
     const onBannerInfoClicked = (bannerId: any) => {
         setClickedSlider("banner");
         history.push(`/tv/${bannerId}`);
@@ -168,7 +168,7 @@ function Tv() {
                 {bigMovieMatch ? (
                     <>
                         <Overlay
-                            onClick={() => onOverlayClicked}
+                            onClick={onOverlayClicked}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         />
