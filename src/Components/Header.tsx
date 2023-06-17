@@ -73,7 +73,7 @@ const Input = styled(motion.input)`
     background: ${(props) => props.theme.black.darker};
     border: ${(props) => props.theme.white.lighter} 1px solid;
     padding: 8px;
-    padding-right: 20px;
+    padding-right: 10px;
     color: ${(props) => props.theme.white.lighter};
     font-size: 13px;
     outline: none;

@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { movieDetailState, tvDetailState } from './atoms';
 import TvDetails from '../Components/TvDetails';
 import MovieDetails from '../Components/MovieDetails';
+import { useEffect } from 'react';
 
 const Wrapper = styled.div`
     height: 200vh;
@@ -20,6 +21,7 @@ const Loader = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    color: ${(props) => props.theme.white.lighter};
 `;
 const ResultsTitle = styled.h3`
     padding: 60px;
@@ -141,6 +143,9 @@ function Search() {
 			history.push(`/search?keyword=${keyword}&type=tv&id=${contentId}`);
 		}
     };
+    useEffect(() => { // 슬라이드 박스 클릭시 스크롤을 막고 고정시킨다!
+		id ? (document.body.style.overflowY = "hidden") : (document.body.style.overflowY = "auto");
+	}, [id]);
     return (
         <Wrapper>
             {isLoading ? <Loader> 로딩 중... </Loader> : (
