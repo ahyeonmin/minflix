@@ -185,6 +185,8 @@ function TvDetails({ from = "tv" }: IDetails) {
                                 <FaStar style={{ paddingRight: "3px" }}/>
                                 {detailsData?.vote_average.toFixed(1)}
                             </Info>
+                            <Info> {detailsData?.first_air_date.slice(0, 4)} </Info>
+                            <Info> 에피소드 {detailsData?.last_episode_to_air.episode_number}개 </Info>
                             <Info>
                                 {detailsData?.genres.map((g) => (
                                     <>
@@ -197,6 +199,7 @@ function TvDetails({ from = "tv" }: IDetails) {
                                     </>
                                 ))}
                             </Info>
+                            <Info>  </Info>
                         </InfoContainer>
                         <Overview> {detailsData?.overview} </Overview>
                         <Credits>

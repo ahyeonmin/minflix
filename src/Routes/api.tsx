@@ -64,6 +64,7 @@ export interface ITv {
 		id: number;
 		name: string;
 	}[];
+    last_episode_to_air: { episode_number: number };
 }
 
 export interface IGetTvResult {
