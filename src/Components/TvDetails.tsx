@@ -159,12 +159,16 @@ const SimilarWrapper = styled.div`
 
 function TvDetails({ from = "tv" }: IDetails) {
     const history = useHistory();
-    const [ tvDetail, setTvDetail ] = useRecoilState(tvDetailState);
+    const [ tvDetail ] = useRecoilState(tvDetailState);
     var detailsId = parseInt(tvDetail && tvDetail.id);
     const { data: detailsData } = useQuery<ITv>(["details", detailsId], () => getTvDetails(detailsId)); // query key인 detailsId가 바뀌면 query 함수가 재실행된다. 이를 통해 새로고침 시, id에 맞는 데이터가 유실되어 렌더링하지 못하는 에러를 해결했다.
     const { data: creditsData } = useQuery<ICredits>(["credits", detailsId], () => getTvCredits(detailsId));
     return (
-        <Wrapper>
+        <Wrapper
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
             {tvDetail && (
                 <>
                     <Cover

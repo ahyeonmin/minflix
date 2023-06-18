@@ -123,11 +123,11 @@ function Tv() {
             {isTvAnimeLoading || isTvPopularLoading || isTvTopRatedLoading || isOnTheAirLoading || isTvActionLoading || isTvSfFantasyLoading
                 ? <Loader> 로딩 중... </Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
-                    <Banner bgPhoto={makeImagePath(tvAnimeData?.results[16].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
-                        <Title>{tvAnimeData?.results[16].name}</Title>
-                        <Overview>{tvAnimeData?.results[16].overview}</Overview>
+                    <Banner bgPhoto={makeImagePath(tvAnimeData?.results[15].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                        <Title>{tvAnimeData?.results[15].name}</Title>
+                        <Overview>{tvAnimeData?.results[15].overview}</Overview>
                         <BannerInfo
-                            onClick={() => onBannerInfoClicked(tvAnimeData?.results[16].id)}
+                            onClick={() => onBannerInfoClicked(tvAnimeData?.results[15].id)}
                         >
                             <BiInfoCircle style={{ fontSize: "23px", paddingRight: "8px" }}/> 상세 정보
                         </BannerInfo>

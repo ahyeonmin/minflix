@@ -11,7 +11,7 @@ import MovieDetails from '../Components/MovieDetails';
 import { useEffect } from 'react';
 
 const Wrapper = styled.div`
-    height: 200vh;
+    height: 120vh;
     background-color: ${(props) => props.theme.black.veryDark};
     color: white;
     padding-top: 70px;
@@ -81,7 +81,7 @@ const Overlay = styled(motion.div)`
     position: absolute;
     top: 0;
     width: 100vw;
-    height: 250vh;
+    height: 120vh;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;

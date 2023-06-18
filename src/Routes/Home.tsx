@@ -124,11 +124,11 @@ function Home() {
             {isNowPlayingLoading || isPopularLoading || isTopRatedLoading || isAnimeLoading || isSfLoading || isFantasyLoading
                 ? <Loader> 로딩 중.. .</Loader> : (
                     // 배너에는 첫번쨰 항목 보여주기
-                    <Banner bgPhoto={makeImagePath(sfData?.results[5].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
-                        <Title>{sfData?.results[5].title}</Title>
-                        <Overview>{sfData?.results[5].overview}</Overview>
+                    <Banner bgPhoto={makeImagePath(sfData?.results[8].backdrop_path || "")}> {/* 만약 data가 없을 경우 빈 문자열로 */}
+                        <Title>{sfData?.results[8].title}</Title>
+                        <Overview>{sfData?.results[8].overview}</Overview>
                         <BannerInfo
-                            onClick={() => onBannerInfoClicked(sfData?.results[5].id)}
+                            onClick={() => onBannerInfoClicked(sfData?.results[8].id)}
                         >
                             <BiInfoCircle style={{ fontSize: "23px", paddingRight: "8px" }}/> 상세 정보
                         </BannerInfo>
