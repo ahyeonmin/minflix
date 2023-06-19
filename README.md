@@ -1,4 +1,4 @@
-# 넷플릭스 클론
+# 넷플릭스 클론 (Netflix Clone)
 <br/>
 
 <p align="center"><img src="https://user-images.githubusercontent.com/83111413/246801822-5709f51b-2dfc-4eaa-bf77-0cdd1e0d79af.png"></p>
@@ -54,6 +54,6 @@
 ### Details
 <img width="1440" alt="netflix_home_details" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/0f9b1499-7cb6-467a-bd51-7cc8fd7618f7">
 
-- 해당 콘텐츠에 대한 
-- 오버레이 클릭 시에도 모달창을 닫을 수 있습니다.
+- 해당 콘텐츠에 대한 상세 정보를 확인할 수 있고, 비슷한 영화를 추천합니다.
+- 모달창 외부 클릭 시에도 모달창을 닫을 수 있습니다.
 - 시리즈 모달창엔 에피소드 개수도 추가했습니다.
