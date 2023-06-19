@@ -9,6 +9,11 @@
 
 <br/>
 
+## 🖥️&nbsp; 데모
+> GitHub Pages : <https://ahyeonmin.github.io/react-netflix/#/>
+
+<br/>
+
 ## 🛠️&nbsp; 기술 스택
 `Typescript`
 `React Router`
@@ -20,10 +25,9 @@
 
 <br/>
 
-## 🖥️&nbsp; 데모
-> <https://ahyeonmin.github.io/react-netflix/#/>
-
-<br/>
+## 💡 페이지 설명
+#### 1. [Home](https://ahyeonmin.github.io/react-netflix/#/) (영화)
+<img width="1440" alt="netflix_home" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/1d16452a-084c-4922-a3be-0d0b4cc87317">
 
 ## 💡 주요 기능
 > 모든 콘텐츠 정보는 React Query를 이용하여 The Movie Database의 API 데이터를 가져와서 사용했습니다.
