@@ -26,7 +26,7 @@
 <br/>
 
 ## ⚙️&nbsp; 구성 및 기능
-> 모든 콘텐츠 정보는 React Query를 이용하여 The Movie Database의 API 데이터를 가져와서 사용했습니다.
+> 모든 콘텐츠 정보는 React Query를 이용하여 [The Movie Database](https://developer.themoviedb.org/reference/intro/getting-started)의 API 데이터를 가져왔습니다.
 <br/>
 
 ### Home
@@ -46,7 +46,14 @@
 ### Search
 <img width="1440" alt="netflix_search" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/4ac54e74-651d-444c-9649-b18d27b1fa39">
 
+- 검색창에 값을 입력하고 엔터를 치면, 입력한 값과 함께 검색 페이지로 넘어갑니다.
+  - `useLocation`을 사용해서 현재 페이지의 정보를 가져온 후, `URLSearchParams`로 url의 query에 들어간 값을 가져옵니다. 가져온 query 값으로 검색 결과를 띄웁니다.
 - 데이터에 type을 지정해 영화와 시리즈를 구분했습니다.
+<br/>
 
 ### Details
 <img width="1440" alt="netflix_home_details" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/0f9b1499-7cb6-467a-bd51-7cc8fd7618f7">
+
+- 해당 콘텐츠에 대한 
+- 오버레이 클릭 시에도 모달창을 닫을 수 있습니다.
+- 시리즈 모달창엔 에피소드 개수도 추가했습니다.
