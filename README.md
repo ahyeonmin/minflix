@@ -1,4 +1,4 @@
-# 넷플릭스 클론
+https://ahyeonmin.github.io/react-netflix/#/tv# 넷플릭스 클론
 <br/>
 
 <p align="center"><img src="https://user-images.githubusercontent.com/83111413/246801822-5709f51b-2dfc-4eaa-bf77-0cdd1e0d79af.png"></p>
@@ -26,8 +26,16 @@
 <br/>
 
 ## 💡 페이지 설명
-#### 1. [Home](https://ahyeonmin.github.io/react-netflix/#/) (영화)
+#### 1. [Home](https://ahyeonmin.github.io/react-netflix/#/)
 <img width="1440" alt="netflix_home" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/1d16452a-084c-4922-a3be-0d0b4cc87317">
+
+#### 2. [Tv](https://ahyeonmin.github.io/react-netflix/#/tv)
+<img width="1440" alt="netflix_series" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/bba02d55-8e49-4475-be13-70ae306eb483">
+
+#### 3. [Search](https://ahyeonmin.github.io/react-netflix/#/search?keyword=진격의%20거인)
+<img width="1440" alt="netflix_search" src="https://github.com/ahyeonmin/react-netflix/assets/83111413/4ac54e74-651d-444c-9649-b18d27b1fa39">
+
+<br/><br/>
 
 ## 💡 주요 기능
 > 모든 콘텐츠 정보는 React Query를 이용하여 The Movie Database의 API 데이터를 가져와서 사용했습니다.
