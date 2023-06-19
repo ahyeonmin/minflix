@@ -26,7 +26,7 @@
 <br/>
 
 ## ⚙️&nbsp; 구성 및 기능
-> 모든 콘텐츠 정보는 React Query를 이용하여 [The Movie Database](https://developer.themoviedb.org/reference/intro/getting-started)의 API 데이터를 가져왔습니다.
+> 모든 콘텐츠 정보는 React Query를 이용하여 [The Movie Database](https://developer.themoviedb.org/reference/intro/getting-started)의 API 데이터를 가져와서 사용했습니다.
 <br/>
 
 ### Home
