@@ -6,10 +6,12 @@
 
 ## 설명
 리액트와 타입스크립트를 공부하면서 넷플릭스 사이트의 간단한 기능을 구현해 보았습니다. \
-상세 정보는 React Query를 이용하여 themoviedb로부터 API 데이터를 가져와서 사용했습니다.
+모든 콘텐츠 정보는 React Query를 이용하여 The Movie Database의 API 데이터를 가져와서 사용했습니다.
 <br/><br/>
 
-## 배포
+## 기술 스택
+
+## 데모
 https://ahyeonmin.github.io/react-netflix/#/
 
 
